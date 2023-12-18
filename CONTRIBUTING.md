@@ -1,0 +1,24 @@
+# sakana-widget-react Contributing Guide
+
+## Setup
+(Optional) Use corepack
+```
+corepack enable
+```
+
+Install dependencies using [pnpm](https://pnpm.io/)
+```
+pnpm install
+```
+
+### Run Storybook to preview
+```
+pnpm run storybook
+```
+
+### Check and fix format and lint
+```
+pnpm run format:fix
+pnpm run lint:fix
+```
+

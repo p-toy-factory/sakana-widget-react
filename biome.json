@@ -1,0 +1,22 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.4.0/schema.json",
+  "linter": {
+    "rules": {
+      "style": {
+        "noNegationElse": "error",
+        "noNonNullAssertion": "off",
+        "useNamingConvention": {
+          "level": "error",
+          "options": {
+            "strictCase": false
+          }
+        }
+      }
+    }
+  },
+  "json": {
+    "formatter": {
+      "indentStyle": "space"
+    }
+  }
+}

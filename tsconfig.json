@@ -1,0 +1,6 @@
+{
+  "extends": "@pinkchampagne/tsconfig",
+  "compilerOptions": {
+    "jsx": "react-jsx"
+  }
+}
