@@ -4,6 +4,8 @@
 
 A [React](https://react.dev/) component that wrap [Sakana! Widget](https://github.com/dsrkafuu/sakana-widget).
 
+[See demo](https://sakana-widget-react.vercel.app/)
+
 ## Quick Start
 
 ### Install
