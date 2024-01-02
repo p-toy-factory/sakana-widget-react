@@ -1,7 +1,7 @@
 {
   "name": "sakana-widget-react",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "packageManager": "pnpm@8.12.1",
   "description": "A React component that wrap \"Sakana! Widget\".",
   "author": "pinkchampagne",
@@ -17,7 +17,8 @@
     "format": "biome format .",
     "format:fix": "pnpm run format --write",
     "lint": "env ESLINT_USE_FLAT_CONFIG=true eslint . --cache",
-    "lint:fix": "pnpm run lint --fix"
+    "lint:fix": "pnpm run lint --fix",
+    "release": "pnpm run build && npm publish"
   },
   "peerDependencies": {
     "react": "^18.2.0",
