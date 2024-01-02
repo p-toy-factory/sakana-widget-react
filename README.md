@@ -26,7 +26,7 @@ The props of **SanakaWidget component** will be used as parameter of construct o
 import { SanakaWidget } from "sakana-widget-react";
 
 function App() {
-  return <SanakaWidget character="takina" title />;
+	return <SanakaWidget character="takina" title />;
 }
 ```
 
@@ -39,8 +39,8 @@ import { CSSProperties } from "react";
 import { SakanaWidgetOptions } from "sakana-widget";
 
 export interface SakanaWidgetProps extends SakanaWidgetOptions {
-  className?: string;
-  style?: CSSProperties;
+	className?: string;
+	style?: CSSProperties;
 }
 ```
 
@@ -49,3 +49,7 @@ export interface SakanaWidgetProps extends SakanaWidgetOptions {
 Released under MIT License, please note that the 2 default images **should not be used for any commercial activities**. This project used to be a secondary development based on [Sakana! Widget](https://github.com/dsrkafuu/sakana-widget).
 
 Image source: 大伏アオ [@blue00f4](https://twitter.com/blue00f4) [pixiv](https://pixiv.me/aoiroblue1340)
+
+## Contributing
+
+See [CONTRIBUTING.md](https://github.com/p-toy-factory/sakana-widget-react/blob/main/CONTRIBUTING.md).
