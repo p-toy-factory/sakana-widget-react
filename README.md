@@ -26,7 +26,14 @@ The props of **SanakaWidget component** will be used as parameter of construct o
 import { SanakaWidget } from "sakana-widget-react";
 
 function App() {
-	return <SanakaWidget character="takina" title />;
+	return (
+		<SanakaWidget
+			options={{
+				character: "takina",
+				title: true,
+			}}
+		/>
+	);
 }
 ```
 
@@ -35,12 +42,19 @@ function App() {
 ### Props
 
 ```ts
-import { CSSProperties } from "react";
+import React from "react";
 import { SakanaWidgetOptions } from "sakana-widget";
 
-export interface SakanaWidgetProps extends SakanaWidgetOptions {
-	className?: string;
-	style?: CSSProperties;
+type DivElementAttributes = Omit<
+	React.DetailedHTMLProps<
+		React.HTMLAttributes<HTMLDivElement>,
+		HTMLDivElement
+	>,
+	"key" | "ref"
+>;
+
+export interface SakanaWidgetProps extends DivElementAttributes {
+	options: SakanaWidgetOptions;
 }
 ```
 

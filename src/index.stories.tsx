@@ -1,13 +1,12 @@
 import "sakana-widget/lib/index.css";
 
-import type { Meta, StoryObj } from "@storybook/react";
+import type { ArgTypes, Meta } from "@storybook/react";
 
-import { SakanaWidget } from ".";
+import { SakanaWidget, SakanaWidgetProps } from ".";
 
-const meta: Meta<typeof SakanaWidget> = {
+const meta: Meta = {
 	title: "SakanaWidget",
 	component: SakanaWidget,
-	tags: ["autodocs"],
 	argTypes: {
 		autoFit: {
 			type: "boolean",
@@ -55,24 +54,39 @@ const meta: Meta<typeof SakanaWidget> = {
 			defaultValue: false,
 			description: "enable accessibility title feature, default to `false`",
 		},
-	},
+	} satisfies Partial<ArgTypes<SakanaWidgetProps["options"]>>,
 };
 
 export default meta;
 
-type Story = StoryObj<typeof SakanaWidget>;
+const primaryOptions: SakanaWidgetProps["options"] = {
+	character: "chisato",
+	controls: true,
+	draggable: true,
+	rod: true,
+	title: true,
+};
 
-export const Primary: Story = {
+export const Primary = {
 	args: {
-		character: "chisato",
-		controls: true,
-		draggable: true,
-		rod: true,
 		style: {
 			display: "grid",
 			height: 400,
 			placeContent: "center",
 		},
-		title: true,
+		...primaryOptions,
 	},
+	render: ({
+		options,
+		style,
+		...storybookControlsOptions
+	}: SakanaWidgetProps) => (
+		<SakanaWidget
+			options={{
+				...options,
+				...(storybookControlsOptions as SakanaWidgetProps["options"]),
+			}}
+			style={style}
+		/>
+	),
 };

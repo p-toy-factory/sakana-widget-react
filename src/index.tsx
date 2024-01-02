@@ -1,24 +1,29 @@
 "use client";
 
-import { type CSSProperties, useEffect, useRef } from "react";
+import {
+	type DetailedHTMLProps,
+	type HTMLAttributes,
+	useEffect,
+	useRef,
+} from "react";
 import SakanaWidgetClass, { type SakanaWidgetOptions } from "sakana-widget";
 
-export interface SakanaWidgetProps extends SakanaWidgetOptions {
-	className?: string;
-	style?: CSSProperties;
+type DivElementAttributes = Omit<
+	DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
+	"key" | "ref"
+>;
+
+export interface SakanaWidgetProps extends DivElementAttributes {
+	options: SakanaWidgetOptions;
 }
 
-export const SakanaWidget = ({
-	className,
-	style,
-	...sakanaWidgetOptions
-}: SakanaWidgetProps) => {
+export const SakanaWidget = ({ options, ...divAttrs }: SakanaWidgetProps) => {
 	const ref = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		let hasUnmounted = false;
 
-		const instance = new SakanaWidgetClass(sakanaWidgetOptions);
+		const instance = new SakanaWidgetClass(options);
 		const originalUnmount = instance.unmount;
 		instance.unmount = () => {
 			hasUnmounted = true;
@@ -37,7 +42,7 @@ export const SakanaWidget = ({
 				instance.unmount();
 			}
 		};
-	}, [sakanaWidgetOptions]);
+	}, [options]);
 
-	return <div className={className} style={style} ref={ref} />;
+	return <div ref={ref} {...divAttrs} />;
 };
