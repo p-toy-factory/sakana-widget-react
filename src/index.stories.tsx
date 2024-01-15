@@ -1,13 +1,16 @@
 import "sakana-widget/lib/index.css";
 
 import type { ArgTypes, Meta } from "@storybook/react";
+import pick from "object.pick";
+import { SakanaWidgetOptions, SakanaWidgetState } from "sakana-widget";
 
-import { SakanaWidget, SakanaWidgetProps } from ".";
+import { SakanaWidget, type SakanaWidgetProps } from ".";
 
 const meta: Meta = {
 	title: "SakanaWidget",
 	component: SakanaWidget,
 	argTypes: {
+		// #region SakanaWidgetProps
 		autoFit: {
 			type: "boolean",
 			defaultValue: false,
@@ -54,7 +57,39 @@ const meta: Meta = {
 			defaultValue: false,
 			description: "enable accessibility title feature, default to `false`",
 		},
-	} satisfies Partial<ArgTypes<SakanaWidgetProps["options"]>>,
+		// #endregion
+
+		// #region SakanaWidgetState
+		i: {
+			type: "number",
+			description: "inertia",
+		},
+		s: {
+			type: "number",
+			description: "stickiness",
+		},
+		d: {
+			type: "number",
+			description: "decay",
+		},
+		r: {
+			type: "number",
+			description: "angle",
+		},
+		y: {
+			type: "number",
+			description: "height",
+		},
+		t: {
+			type: "number",
+			description: "vertical speed",
+		},
+		w: {
+			type: "number",
+			description: "horizontal speed",
+		},
+		// #endregion
+	} satisfies Partial<ArgTypes<SakanaWidgetOptions & SakanaWidgetState>>,
 };
 
 export default meta;
@@ -67,6 +102,28 @@ const primaryOptions: SakanaWidgetProps["options"] = {
 	title: true,
 };
 
+const sakanaWidgetOptionsKeys: Array<keyof SakanaWidgetOptions> = [
+	"autoFit",
+	"character",
+	"controls",
+	"draggable",
+	"rod",
+	"rotate",
+	"size",
+	"stroke",
+	"title",
+];
+
+const sakanaWidgetStateKeys: Array<keyof SakanaWidgetState> = [
+	"d",
+	"i",
+	"r",
+	"s",
+	"t",
+	"w",
+	"y",
+];
+
 export const Primary = {
 	args: {
 		style: {
@@ -76,17 +133,27 @@ export const Primary = {
 		},
 		...primaryOptions,
 	},
-	render: ({
-		options,
-		style,
-		...storybookControlsOptions
-	}: SakanaWidgetProps) => (
-		<SakanaWidget
-			options={{
-				...options,
-				...(storybookControlsOptions as SakanaWidgetProps["options"]),
-			}}
-			style={style}
-		/>
-	),
+	render: ({ style, options, state, ...restProps }: SakanaWidgetProps) => {
+		const controlsOptions = pick(
+			restProps as SakanaWidgetOptions,
+			sakanaWidgetOptionsKeys,
+		);
+		const controlsState = pick(
+			restProps as Partial<SakanaWidgetState>,
+			sakanaWidgetStateKeys,
+		);
+		return (
+			<SakanaWidget
+				options={{
+					...controlsOptions,
+					...options,
+				}}
+				state={{
+					...controlsState,
+					...state,
+				}}
+				style={style}
+			/>
+		);
+	},
 };
