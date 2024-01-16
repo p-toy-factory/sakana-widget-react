@@ -41,6 +41,18 @@ export const SakanaWidget = ({
 		};
 		// #endregion
 
+		// #region Change GitHub icon link
+		// @ts-expect-error Get private property
+		const domApp = instance._domApp as HTMLDivElement;
+		const githubIconDom = domApp.querySelector(
+			"a.sakana-widget-ctrl-item",
+		) as null | HTMLAnchorElement;
+		if (githubIconDom) {
+			githubIconDom.href =
+				"https://github.com/p-toy-factory/sakana-widget-react";
+		}
+		// #endregion
+
 		instanceRef.current = instance;
 
 		/**
