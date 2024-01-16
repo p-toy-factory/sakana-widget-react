@@ -64,9 +64,6 @@ devDependencies:
   eslint-config-pcp:
     specifier: 2.0.0-beta.3
     version: 2.0.0-beta.3(@vue/compiler-sfc@3.4.14)(eslint@8.56.0)(typescript@5.3.3)
-  eslint-plugin-react-hooks:
-    specifier: ^4.6.0
-    version: 4.6.0(eslint@8.56.0)
   eslint-plugin-storybook:
     specifier: ^0.6.15
     version: 0.6.15(eslint@8.56.0)(typescript@5.3.3)
@@ -2523,8 +2520,8 @@ packages:
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
-      react: '*'
-      react-dom: '*'
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
     peerDependenciesMeta:
       '@types/react':
         optional: true
