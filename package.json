@@ -6,19 +6,33 @@
   "description": "A React component that wrap \"Sakana! Widget\".",
   "author": "pinkchampagne",
   "license": "MIT",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/p-toy-factory/sakana-widget-react"
+  },
+  "keywords": [
+    "widget",
+    "lycoris-recoil",
+    "lycoris",
+    "recoil",
+    "chisato",
+    "takina"
+  ],
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": ["dist"],
   "scripts": {
     "build": "tsup src/index.tsx --clean --dts --format=esm,cjs",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
+    "dev": "pnpm run storybook",
     "format": "biome format .",
     "format:fix": "pnpm run format --write",
     "lint": "env ESLINT_USE_FLAT_CONFIG=true eslint . --cache",
     "lint:fix": "pnpm run lint --fix",
-    "release": "pnpm run build && npm publish"
+    "release": "pnpm run build && npm publish",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "peerDependencies": {
     "react": "^18.2.0",
