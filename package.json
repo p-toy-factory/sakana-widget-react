@@ -22,22 +22,27 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup src/index.tsx --clean --dts --format=esm,cjs",
     "dev": "pnpm run storybook",
     "format": "biome format .",
     "format:fix": "pnpm run format --write",
-    "lint": "env ESLINT_USE_FLAT_CONFIG=true eslint . --cache",
     "lint:fix": "pnpm run lint --fix",
     "release": "pnpm run build && npm publish",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test": "vitest"
   },
   "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sakana-widget": "^2.7.0"
+  },
+  "dependencies": {
+    "dequal": "^2.0.3"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.5.2",
@@ -51,6 +56,7 @@
     "@storybook/react-vite": "^7.6.8",
     "@storybook/test": "^7.6.8",
     "@swc/core": "^1.3.103",
+    "@testing-library/react-hooks": "^8.0.1",
     "@types/object.pick": "^1.3.4",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
@@ -59,8 +65,10 @@
     "eslint-plugin-storybook": "^0.6.15",
     "object.pick": "^1.3.0",
     "prop-types": "^15.8.1",
+    "react-test-renderer": "^18.2.0",
     "storybook": "^7.6.8",
     "tsup": "^8.0.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^1.3.0"
   }
 }

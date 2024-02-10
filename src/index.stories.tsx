@@ -2,6 +2,7 @@ import "sakana-widget/lib/index.css";
 
 import type { ArgTypes, Meta } from "@storybook/react";
 import pick from "object.pick";
+import { useState } from "react";
 import { SakanaWidgetOptions, SakanaWidgetState } from "sakana-widget";
 
 import { SakanaWidget, type SakanaWidgetProps } from ".";
@@ -154,6 +155,34 @@ export const Primary = {
 				}}
 				style={style}
 			/>
+		);
+	},
+};
+
+export const TestAvoidUnmountOnPropsChanges = {
+	args: primaryOptions,
+	render: ({ options, ...restProps }: SakanaWidgetProps) => {
+		// eslint-disable-next-line react-hooks/rules-of-hooks
+		const [count, setCount] = useState(0);
+		const controlsOptions = pick(
+			restProps as SakanaWidgetOptions,
+			sakanaWidgetOptionsKeys,
+		);
+		return (
+			<div>
+				<p>
+					Count: {count}{" "}
+					<button type="button" onClick={() => setCount((prev) => prev + 1)}>
+						+1
+					</button>
+				</p>
+				<SakanaWidget
+					options={{
+						...controlsOptions,
+						...options,
+					}}
+				/>
+			</div>
 		);
 	},
 };

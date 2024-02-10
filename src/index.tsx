@@ -11,6 +11,8 @@ import SakanaWidgetClass, {
 	type SakanaWidgetState,
 } from "sakana-widget";
 
+import { useConsistentReference } from "./hooks/use-consistent-reference";
+
 type DivElementAttributes = Omit<
 	DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
 	"key" | "ref"
@@ -21,13 +23,11 @@ export interface SakanaWidgetProps extends DivElementAttributes {
 	state?: Partial<SakanaWidgetState>;
 }
 
-export const SakanaWidget = ({
-	options,
-	state,
-	...divAttrs
-}: SakanaWidgetProps) => {
+export const SakanaWidget = (props: SakanaWidgetProps) => {
+	const { state, ...divAttrs } = props;
 	const ref = useRef<HTMLDivElement>(null);
 	const instanceRef = useRef<SakanaWidgetClass>();
+	const options = useConsistentReference(props.options);
 
 	useEffect(() => {
 		let hasUnmounted = false;
