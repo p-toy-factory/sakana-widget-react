@@ -19,12 +19,14 @@ type DivElementAttributes = Omit<
 >;
 
 export interface SakanaWidgetProps extends DivElementAttributes {
+	/** @default false */
+	disableBounceOnMount?: boolean;
 	options?: SakanaWidgetOptions;
 	state?: Partial<SakanaWidgetState>;
 }
 
 export const SakanaWidget = (props: SakanaWidgetProps) => {
-	const { state, ...divAttrs } = props;
+	const { disableBounceOnMount = false, state, ...divAttrs } = props;
 	const ref = useRef<HTMLDivElement>(null);
 	const instanceRef = useRef<SakanaWidgetClass>();
 	const options = useConsistentReference(props.options);
@@ -55,6 +57,10 @@ export const SakanaWidget = (props: SakanaWidgetProps) => {
 
 		instanceRef.current = instance;
 
+		if (disableBounceOnMount) {
+			instance.setState({ r: 0, y: 0.06 });
+		}
+
 		/**
 		 * The div element will be replaced during calling `SakanaWidget.mount`
 		 * @see https://github.com/dsrkafuu/sakana-widget/blob/69dbdd85688425ece3f17c1abc7c92effe842704/src/index.ts#L665C28-L665C28
@@ -69,7 +75,7 @@ export const SakanaWidget = (props: SakanaWidgetProps) => {
 				instance.unmount();
 			}
 		};
-	}, [options]);
+	}, [disableBounceOnMount, options]);
 
 	useEffect(() => {
 		if (state) {

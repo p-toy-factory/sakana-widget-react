@@ -42,18 +42,17 @@ function App() {
 ### Props
 
 ```ts
-import React from "react";
+import { type DetailedHTMLProps, type HTMLAttributes } from "react";
 import { SakanaWidgetOptions } from "sakana-widget";
 
 type DivElementAttributes = Omit<
-	React.DetailedHTMLProps<
-		React.HTMLAttributes<HTMLDivElement>,
-		HTMLDivElement
-	>,
+	DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
 	"key" | "ref"
 >;
 
 export interface SakanaWidgetProps extends DivElementAttributes {
+	/** @default false */
+	disableBounceOnMount?: boolean;
 	options: SakanaWidgetOptions;
 }
 ```

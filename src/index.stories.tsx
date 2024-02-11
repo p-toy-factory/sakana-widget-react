@@ -28,6 +28,11 @@ const meta: Meta = {
 			defaultValue: true,
 			description: "controls bar, default to `true`",
 		},
+		disableBounceOnMount: {
+			type: "boolean",
+			defaultValue: false,
+			description: "default to `false`",
+		},
 		draggable: {
 			type: "boolean",
 			defaultValue: true,
@@ -156,6 +161,15 @@ export const Primary = {
 				style={style}
 			/>
 		);
+	},
+};
+
+export const DisableBounceOnMount = {
+	args: {
+		disableBounceOnMount: true,
+	},
+	render: ({ disableBounceOnMount }: SakanaWidgetProps) => {
+		return <SakanaWidget disableBounceOnMount={disableBounceOnMount} />;
 	},
 };
 
