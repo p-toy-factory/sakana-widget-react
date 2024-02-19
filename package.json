@@ -30,6 +30,7 @@
     "dev": "pnpm run storybook",
     "format": "biome format .",
     "format:fix": "pnpm run format --write",
+    "lint": "ESLINT_USE_FLAT_CONFIG=true eslint . --cache",
     "lint:fix": "pnpm run lint --fix",
     "release": "pnpm run build && npm publish",
     "storybook": "storybook dev -p 6006",
