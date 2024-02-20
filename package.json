@@ -1,7 +1,7 @@
 {
   "name": "sakana-widget-react",
   "type": "module",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "packageManager": "pnpm@8.12.1",
   "description": "A React component that wrap \"Sakana! Widget\".",
   "author": "pinkchampagne",
