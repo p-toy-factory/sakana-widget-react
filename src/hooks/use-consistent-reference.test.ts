@@ -8,7 +8,7 @@ describe("useConsistentReference", () => {
 
 	const { result, rerender } = renderHook(
 		({ arg }) => useConsistentReference(arg),
-		{ initialProps: { arg: initArg } }
+		{ initialProps: { arg: initArg } },
 	);
 
 	test("Memoize reference", () => {
