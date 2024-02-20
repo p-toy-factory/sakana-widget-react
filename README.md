@@ -14,13 +14,13 @@ A [React](https://react.dev/) component that wrap [Sakana! Widget](https://githu
 npm install sakana-widget sakana-widget-react
 ```
 
-### Import CSS file
+### Import CSS
 
-See [usage of Sanaka! Widget's README](https://github.com/dsrkafuu/sakana-widget/tree/main?tab=readme-ov-file#usage), choose a method you prefer.
+See [usage of Sanaka! Widget's README](https://github.com/dsrkafuu/sakana-widget/tree/main?tab=readme-ov-file#usage), choose a method you prefer to import CSS.
 
 ### Use component
 
-The props of **SanakaWidget component** will be used as parameter of construct of **SanakaWidget class**.
+`options` property of **SanakaWidget component** will be used as parameter of constructor of **SanakaWidget class**.
 
 ```tsx
 import { SanakaWidget } from "sakana-widget-react";
