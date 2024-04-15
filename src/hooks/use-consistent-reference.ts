@@ -1,29 +1,21 @@
 import { dequal } from "dequal";
-import { useRef } from "react";
+import { useState } from "react";
 
-export const useConsistentReference = <T>(arg: T): T => {
-	const ref = useRef<{
-		memoized: T;
-		prev: T;
-	}>();
+export const useConsistentReference = <T>(passthrough: T): T => {
+	const [{ cachedValue, prevPassthrough }, set] = useState(() => ({
+		cachedValue: passthrough,
+		prevPassthrough: passthrough,
+	}));
 
-	if (ref.current) {
-		const { memoized, prev } = ref.current;
-		if (arg === prev) {
-			return memoized;
-		}
-		if (dequal(memoized, arg)) {
-			ref.current = {
-				...ref.current,
-				prev: arg,
-			};
-			return memoized;
-		}
+	if (passthrough === prevPassthrough) {
+		return cachedValue;
 	}
 
-	ref.current = {
-		memoized: arg,
-		prev: arg,
-	};
-	return arg;
+	if (dequal(cachedValue, passthrough)) {
+		set((prevState) => ({ ...prevState, prevPassthrough: passthrough }));
+		return cachedValue;
+	}
+
+	set({ cachedValue: passthrough, prevPassthrough: passthrough });
+	return passthrough;
 };
