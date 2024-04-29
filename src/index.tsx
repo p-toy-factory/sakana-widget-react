@@ -26,14 +26,14 @@ export interface SakanaWidgetProps extends DivElementAttributes {
 }
 
 export const SakanaWidget = (props: SakanaWidgetProps) => {
-	const { disableBounceOnMount = false, state, ...divAttrs } = props;
+	const { disableBounceOnMount = false, options, state, ...divAttrs } = props;
 	const ref = useRef<HTMLDivElement>(null);
 	const instanceRef = useRef<SakanaWidgetClass>();
-	const options = useConsistentReference(props.options);
+	const consistentOptions = useConsistentReference(options);
 
 	useEffect(() => {
 		let hasUnmounted = false;
-		const instance = new SakanaWidgetClass(options);
+		const instance = new SakanaWidgetClass(consistentOptions);
 
 		// #region Override `SakanaWidget.unmount`
 		const originalUnmount = instance.unmount;
@@ -75,7 +75,7 @@ export const SakanaWidget = (props: SakanaWidgetProps) => {
 				instance.unmount();
 			}
 		};
-	}, [disableBounceOnMount, options]);
+	}, [disableBounceOnMount, consistentOptions]);
 
 	useEffect(() => {
 		if (state) {
