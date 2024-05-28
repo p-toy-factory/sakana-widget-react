@@ -6,13 +6,12 @@ A [React](https://react.dev/) component that wrap [Sakana! Widget](https://githu
 
 [See demo](https://sakana-widget-react.pages.dev/)
 
-
 ## Quick Start
 
 ### Install
 
 ```
-npm install sakana-widget sakana-widget-react
+npm install sakana-widget-react sakana-widget@2.7.1
 ```
 
 ### Import CSS
@@ -24,11 +23,11 @@ See [usage of Sanaka! Widget's README](https://github.com/dsrkafuu/sakana-widget
 `options` property of **SanakaWidget component** will be used as parameter of constructor of **SanakaWidget class**.
 
 ```tsx
-import { SanakaWidget } from "sakana-widget-react";
+import { SakanaWidget } from "sakana-widget-react";
 
 function App() {
 	return (
-		<SanakaWidget
+		<SakanaWidget
 			options={{
 				character: "takina",
 				title: true,
@@ -38,12 +37,20 @@ function App() {
 }
 ```
 
+If you need to use both `sakana-widget` and `sakana-widget-react` in the same file, import `SakanaWidgetReact` to avoid naming conflicts:
+
+```tsx
+import SakanaWidget from "sakana-widget";
+import { SakanaWidgetReact } from "sakana-widget-react";
+```
+
 ## API
 
 ### Props
 
 ```ts
-import { type DetailedHTMLProps, type HTMLAttributes } from "react";
+import { type DetailedHTMLProps, type HTMLAttributes, type Ref } from "react";
+import type SakanaWidget from "sakana-widget";
 import { SakanaWidgetOptions } from "sakana-widget";
 
 type DivElementAttributes = Omit<
@@ -54,7 +61,8 @@ type DivElementAttributes = Omit<
 export interface SakanaWidgetProps extends DivElementAttributes {
 	/** @default false */
 	disableBounceOnMount?: boolean;
-	options: SakanaWidgetOptions;
+	widgetRef?: Ref<SakanaWidget>;
+	options?: SakanaWidgetOptions;
 }
 ```
 
