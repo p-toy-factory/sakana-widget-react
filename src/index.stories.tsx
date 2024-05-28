@@ -176,7 +176,6 @@ export const DisableBounceOnMount = {
 export const TestAvoidUnmountOnPropsChanges = {
 	args: primaryOptions,
 	render: ({ options, ...restProps }: SakanaWidgetProps) => {
-		// eslint-disable-next-line react-hooks/rules-of-hooks
 		const [count, setCount] = useState(0);
 		const controlsOptions = pick(
 			restProps as SakanaWidgetOptions,

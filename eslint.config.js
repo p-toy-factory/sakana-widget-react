@@ -1,3 +1,5 @@
 import { buildConfig } from "eslint-config-pcp";
 
-export default buildConfig();
+export default (await buildConfig()).filter(
+	(rule) => rule.name !== "pcp/react",
+);
