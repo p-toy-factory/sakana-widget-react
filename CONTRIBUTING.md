@@ -2,12 +2,6 @@
 
 ## Setup
 
-(Optional) Use corepack
-
-```
-corepack enable
-```
-
 Install dependencies using [pnpm](https://pnpm.io/)
 
 ```

@@ -1,19 +1,11 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.5.2/schema.json",
-  "formatter": { "ignore": ["dist", "storybook-static"] },
+  "$schema": "https://biomejs.dev/schemas/2.3.15/schema.json",
+  "assist": {
+    "enabled": false
+  },
+  "formatter": { "includes": ["**", "!**/dist", "!**/storybook-static"] },
   "linter": {
-    "rules": {
-      "style": {
-        "noNegationElse": "error",
-        "noNonNullAssertion": "off",
-        "useNamingConvention": {
-          "level": "error",
-          "options": {
-            "strictCase": false
-          }
-        }
-      }
-    }
+    "enabled": false
   },
   "json": {
     "formatter": {

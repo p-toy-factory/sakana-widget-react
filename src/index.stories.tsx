@@ -1,187 +1,138 @@
 import "sakana-widget/lib/index.css";
 
-import type { ArgTypes, Meta } from "@storybook/react";
-import pick from "object.pick";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { SakanaWidgetOptions, SakanaWidgetState } from "sakana-widget";
+import type { SakanaWidgetOptions } from "sakana-widget";
 
 import { SakanaWidget, type SakanaWidgetProps } from ".";
+
+function toWidgetProps({
+	autoFit,
+	character,
+	controls,
+	draggable,
+	rod,
+	rotate,
+	size,
+	stroke,
+	threshold,
+	title,
+	...props
+}: SakanaWidgetProps & SakanaWidgetOptions): SakanaWidgetProps {
+	return {
+		...props,
+		options: Object.fromEntries(
+			Object.entries({
+				autoFit,
+				character,
+				controls,
+				draggable,
+				rod,
+				rotate,
+				size,
+				stroke,
+				threshold,
+				title,
+			}).filter(([, v]) => v !== undefined),
+		) as SakanaWidgetOptions,
+	};
+}
 
 const meta: Meta = {
 	title: "SakanaWidget",
 	component: SakanaWidget,
 	argTypes: {
-		// #region SakanaWidgetProps
-		autoFit: {
-			type: "boolean",
+		disableBounceOnMount: {
+			control: "boolean",
 			defaultValue: false,
+			description: "default to `false`",
+		},
+		autoFit: {
+			defaultValue: false,
+			control: "boolean",
 			description: "auto fit size (120px minimum), default to `false`",
 		},
 		character: {
-			control: { type: "select" },
+			control: "select",
 			options: ["chisato", "takina"],
 			defaultValue: "chisato",
 			description: "default character, default to `chisato`",
 		},
 		controls: {
-			type: "boolean",
 			defaultValue: true,
+			control: "boolean",
 			description: "controls bar, default to `true`",
 		},
-		disableBounceOnMount: {
-			type: "boolean",
-			defaultValue: false,
-			description: "default to `false`",
-		},
 		draggable: {
-			type: "boolean",
 			defaultValue: true,
+			control: "boolean",
 			description: "character draggable, default to `true`",
 		},
 		rod: {
-			type: "boolean",
 			defaultValue: true,
+			control: "boolean",
 			description: "show spring rod, default to `true`",
 		},
 		rotate: {
-			type: "number",
 			defaultValue: 0,
+			control: "number",
 			description: "rotate origin, default to `0`",
 		},
 		size: {
-			type: "number",
 			defaultValue: 200,
+			control: "number",
 			description: "widget size, default to `200`",
 		},
 		threshold: {
-			type: "number",
 			defaultValue: 0.1,
+			control: "number",
 			description: "motion stop threshold, default to `0.1`",
 		},
 		title: {
-			type: "boolean",
 			defaultValue: false,
+			control: "boolean",
 			description: "enable accessibility title feature, default to `false`",
 		},
-		// #endregion
-
-		// #region SakanaWidgetState
-		i: {
-			type: "number",
-			description: "inertia",
-		},
-		s: {
-			type: "number",
-			description: "stickiness",
-		},
-		d: {
-			type: "number",
-			description: "decay",
-		},
-		r: {
-			type: "number",
-			description: "angle",
-		},
-		y: {
-			type: "number",
-			description: "height",
-		},
-		t: {
-			type: "number",
-			description: "vertical speed",
-		},
-		w: {
-			type: "number",
-			description: "horizontal speed",
-		},
-		// #endregion
-	} satisfies Partial<ArgTypes<SakanaWidgetOptions & SakanaWidgetState>>,
+	},
 };
 
 export default meta;
 
-const primaryOptions: SakanaWidgetProps["options"] = {
-	character: "chisato",
-	controls: true,
-	draggable: true,
-	rod: true,
-	title: true,
-};
+type Story = StoryObj<typeof meta>;
 
-const sakanaWidgetOptionsKeys: Array<keyof SakanaWidgetOptions> = [
-	"autoFit",
-	"character",
-	"controls",
-	"draggable",
-	"rod",
-	"rotate",
-	"size",
-	"stroke",
-	"title",
-];
-
-const sakanaWidgetStateKeys: Array<keyof SakanaWidgetState> = [
-	"d",
-	"i",
-	"r",
-	"s",
-	"t",
-	"w",
-	"y",
-];
-
-export const Primary = {
+export const Primary: Story = {
 	args: {
 		style: {
 			display: "grid",
-			height: 400,
+			height: 300,
+			width: 300,
 			placeContent: "center",
 		},
-		...primaryOptions,
+		character: "chisato",
+		controls: true,
+		draggable: true,
+		rod: true,
+		title: true,
 	},
-	render: ({ style, options, state, ...restProps }: SakanaWidgetProps) => {
-		const controlsOptions = pick(
-			restProps as SakanaWidgetOptions,
-			sakanaWidgetOptionsKeys,
-		);
-		const controlsState = pick(
-			restProps as Partial<SakanaWidgetState>,
-			sakanaWidgetStateKeys,
-		);
-		return (
-			<SakanaWidget
-				options={{
-					...controlsOptions,
-					...options,
-				}}
-				state={{
-					...controlsState,
-					...state,
-				}}
-				style={style}
-			/>
-		);
-	},
+	render: (args) => <SakanaWidget {...toWidgetProps(args)} />,
 };
 
-export const DisableBounceOnMount = {
+export const DisableBounceOnMount: Story = {
 	args: {
 		disableBounceOnMount: true,
 	},
-	render: ({ disableBounceOnMount }: SakanaWidgetProps) => {
-		return <SakanaWidget disableBounceOnMount={disableBounceOnMount} />;
-	},
 };
 
-export const TestAvoidUnmountOnPropsChanges = {
-	args: primaryOptions,
-	render: ({ options, ...restProps }: SakanaWidgetProps) => {
-		// eslint-disable-next-line react-hooks/rules-of-hooks
+export const TestAvoidUnmountOnPropsChanges: Story = {
+	args: {
+		character: "chisato",
+		controls: true,
+		draggable: true,
+		rod: true,
+		title: true,
+	},
+	render: (args) => {
 		const [count, setCount] = useState(0);
-		const controlsOptions = pick(
-			restProps as SakanaWidgetOptions,
-			sakanaWidgetOptionsKeys,
-		);
 		return (
 			<div>
 				<p>
@@ -190,12 +141,7 @@ export const TestAvoidUnmountOnPropsChanges = {
 						+1
 					</button>
 				</p>
-				<SakanaWidget
-					options={{
-						...controlsOptions,
-						...options,
-					}}
-				/>
+				<SakanaWidget {...toWidgetProps(args)} />
 			</div>
 		);
 	},

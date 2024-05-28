@@ -5,6 +5,7 @@
     "chisato",
     "dequal",
     "endregion",
+    "foxact",
     "lycoris",
     "pinkchampagne",
     "sakana",
@@ -12,8 +13,11 @@
     "takina",
     "tsup"
   ],
-  "eslint.experimental.useFlatConfig": true,
+  "eslint.useFlatConfig": true,
   "[json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescript]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
   "[typescriptreact]": {
