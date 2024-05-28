@@ -22,6 +22,11 @@ export interface SakanaWidgetProps extends DivElementAttributes {
 	/** @default false */
 	disableBounceOnMount?: boolean;
 	options?: SakanaWidgetOptions;
+	/**
+	 * Undocumented prop
+	 *
+	 * @deprecated
+	 */
 	state?: Partial<SakanaWidgetState>;
 }
 
