@@ -2,7 +2,7 @@
   "name": "sakana-widget-react",
   "type": "module",
   "version": "0.3.0",
-  "packageManager": "pnpm@9.1.2",
+  "packageManager": "pnpm@9.4.0",
   "description": "A React component that wrap \"Sakana! Widget\".",
   "author": "pinkchampagne",
   "license": "MIT",
@@ -36,9 +36,6 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": ["dist"],
-  "engines": {
-    "node": ">=20"
-  },
   "scripts": {
     "build": "tsup src/index.tsx --clean --dts --format=esm,cjs",
     "dev": "pnpm run storybook",

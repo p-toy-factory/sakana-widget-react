@@ -2,11 +2,13 @@ import "sakana-widget/lib/index.css";
 
 import type { ArgTypes, Meta } from "@storybook/react";
 import pick from "object.pick";
-import { useState } from "react";
-import { SakanaWidgetOptions, SakanaWidgetState } from "sakana-widget";
+import { useLayoutEffect, useRef, useState } from "react";
+import type SakanaWidgetClass from "sakana-widget";
+import type { SakanaWidgetOptions, SakanaWidgetState } from "sakana-widget";
 
 import { SakanaWidget, type SakanaWidgetProps } from ".";
 
+// TODO: Fix the features and the type errors
 const meta: Meta = {
 	title: "SakanaWidget",
 	component: SakanaWidget,
@@ -139,25 +141,29 @@ export const Primary = {
 		},
 		...primaryOptions,
 	},
-	render: ({ style, options, state, ...restProps }: SakanaWidgetProps) => {
+	render: ({ style, options, ...restProps }: SakanaWidgetProps) => {
 		const controlsOptions = pick(
 			restProps as SakanaWidgetOptions,
 			sakanaWidgetOptionsKeys,
 		);
-		const controlsState = pick(
-			restProps as Partial<SakanaWidgetState>,
-			sakanaWidgetStateKeys,
-		);
+
+		const ref = useRef<SakanaWidgetClass>(null);
+
+		useLayoutEffect(() => {
+			const controlsState = pick(
+				restProps as Partial<SakanaWidgetState>,
+				sakanaWidgetStateKeys,
+			);
+			ref.current!.setState(controlsState);
+		}, [restProps]);
+
 		return (
 			<SakanaWidget
 				options={{
 					...controlsOptions,
 					...options,
 				}}
-				state={{
-					...controlsState,
-					...state,
-				}}
+				innerRef={ref}
 				style={style}
 			/>
 		);

@@ -3,6 +3,7 @@
   "formatter": { "ignore": ["dist", "storybook-static"] },
   "linter": {
     "rules": {
+      "complexity": { "noForEach": "off" },
       "style": {
         "noNegationElse": "error",
         "noNonNullAssertion": "off",
