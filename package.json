@@ -36,6 +36,9 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": ["dist"],
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "tsup src/index.tsx --clean --dts --format=esm,cjs",
     "dev": "pnpm run storybook",
