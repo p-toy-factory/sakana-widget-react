@@ -1,17 +1,13 @@
 "use client";
 
-import {
-	type DetailedHTMLProps,
-	type HTMLAttributes,
-	useEffect,
-	useRef,
-} from "react";
+import { type DetailedHTMLProps, type HTMLAttributes, useRef } from "react";
 import SakanaWidgetClass, {
 	type SakanaWidgetOptions,
 	type SakanaWidgetState,
 } from "sakana-widget";
 
 import { useConsistentReference } from "./hooks/use-consistent-reference";
+import { useIsomorphicLayoutEffect } from "./hooks/use-isomorphic-layout-effect";
 
 type DivElementAttributes = Omit<
 	DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
@@ -36,7 +32,7 @@ export const SakanaWidget = (props: SakanaWidgetProps) => {
 	const instanceRef = useRef<SakanaWidgetClass>();
 	const consistentOptions = useConsistentReference(options);
 
-	useEffect(() => {
+	useIsomorphicLayoutEffect(() => {
 		let hasUnmounted = false;
 		const instance = new SakanaWidgetClass(consistentOptions);
 
@@ -82,7 +78,7 @@ export const SakanaWidget = (props: SakanaWidgetProps) => {
 		};
 	}, [disableBounceOnMount, consistentOptions]);
 
-	useEffect(() => {
+	useIsomorphicLayoutEffect(() => {
 		if (state) {
 			instanceRef.current!.setState(state);
 		}
