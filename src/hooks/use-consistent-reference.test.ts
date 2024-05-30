@@ -11,13 +11,13 @@ describe("useConsistentReference", () => {
 		{ initialProps: { arg: initArg } },
 	);
 
-	test("Memoize reference", () => {
+	test("memoize reference", () => {
 		const initArgClone = { ...initArg };
 		rerender({ arg: initArgClone });
 		expect(result.current).toBe(initArg);
 	});
 
-	test("Change reference", () => {
+	test("change reference", () => {
 		const toChange = { a: 1 };
 		rerender({ arg: toChange });
 		expect(result.current).toBe(toChange);
