@@ -1,13 +1,17 @@
 "use client";
 
-import { type DetailedHTMLProps, type HTMLAttributes, useRef } from "react";
-import SakanaWidgetClass, {
-	type SakanaWidgetOptions,
-	type SakanaWidgetState,
-} from "sakana-widget";
-
-import { useConsistentReference } from "./hooks/use-consistent-reference";
+import {
+	type DetailedHTMLProps,
+	forwardRef,
+	type HTMLAttributes,
+	type Ref,
+	useRef,
+} from "react";
+import SakanaWidget, { type SakanaWidgetOptions } from "sakana-widget";
 import { useIsomorphicLayoutEffect } from "./hooks/use-isomorphic-layout-effect";
+
+import { assignRef, useMergeRefs } from "./hooks/use-merge-refs";
+import { useStructurallyStableValue } from "./hooks/use-structurally-stable-value";
 
 type DivElementAttributes = Omit<
 	DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
@@ -17,72 +21,76 @@ type DivElementAttributes = Omit<
 export interface SakanaWidgetProps extends DivElementAttributes {
 	/** @default false */
 	disableBounceOnMount?: boolean;
+	widgetRef?: Ref<SakanaWidget>;
 	options?: SakanaWidgetOptions;
-	/**
-	 * Undocumented prop
-	 *
-	 * @deprecated
-	 */
-	state?: Partial<SakanaWidgetState>;
 }
 
-export const SakanaWidget = (props: SakanaWidgetProps) => {
-	const { disableBounceOnMount = false, options, state, ...divAttrs } = props;
-	const ref = useRef<HTMLDivElement>(null);
-	const instanceRef = useRef<SakanaWidgetClass>();
-	const consistentOptions = useConsistentReference(options);
+const SakanaWidgetReact = forwardRef<HTMLDivElement, SakanaWidgetProps>(
+	function SakanaWidgetReact(props, ref) {
+		const {
+			className,
+			disableBounceOnMount = false,
+			widgetRef,
+			options,
+			...divAttrs
+		} = props;
+		const divElementRef = useRef<HTMLDivElement>(null);
+		const instanceRef = useRef<SakanaWidget>();
+		const stableOptions = useStructurallyStableValue(options);
 
-	useIsomorphicLayoutEffect(() => {
-		let hasUnmounted = false;
-		const instance = new SakanaWidgetClass(consistentOptions);
+		useIsomorphicLayoutEffect(() => {
+			let hasUnmounted = false;
+			const originalInstance = new SakanaWidget(stableOptions);
+			const instance = Object.create(originalInstance, {
+				unmount: {
+					value: () => {
+						hasUnmounted = true;
+						originalInstance.unmount();
+					},
+				},
+			}) as SakanaWidget;
 
-		// #region Override `SakanaWidget.unmount`
-		const originalUnmount = instance.unmount;
-		instance.unmount = () => {
-			hasUnmounted = true;
-			return originalUnmount();
-		};
-		// #endregion
-
-		// #region Change GitHub icon link
-		// @ts-expect-error Get private property
-		const domApp = instance._domApp as HTMLDivElement;
-		const githubIconDom: HTMLAnchorElement | null = domApp.querySelector(
-			"a.sakana-widget-ctrl-item",
-		);
-		if (githubIconDom) {
-			githubIconDom.href =
-				"https://github.com/p-toy-factory/sakana-widget-react";
-		}
-		// #endregion
-
-		instanceRef.current = instance;
-
-		if (disableBounceOnMount) {
-			instance.setState({ r: 0, y: 0.06 });
-		}
-
-		/**
-		 * The div element will be replaced during calling `SakanaWidget.mount`
-		 * @see https://github.com/dsrkafuu/sakana-widget/blob/69dbdd85688425ece3f17c1abc7c92effe842704/src/index.ts#L665C28-L665C28
-		 */
-		const div = document.createElement("div");
-		ref.current!.replaceChildren(div);
-		instance.mount(div);
-
-		return () => {
-			instanceRef.current = undefined;
-			if (!hasUnmounted) {
-				instance.unmount();
+			// #region Change GitHub icon link
+			// @ts-expect-error Get private property
+			const domApp = instance._domApp as HTMLDivElement;
+			const githubIconDom: HTMLAnchorElement | null = domApp.querySelector(
+				"a.sakana-widget-ctrl-item",
+			);
+			if (githubIconDom) {
+				githubIconDom.href =
+					"https://github.com/p-toy-factory/sakana-widget-react";
 			}
-		};
-	}, [disableBounceOnMount, consistentOptions]);
+			// #endregion
 
-	useIsomorphicLayoutEffect(() => {
-		if (state) {
-			instanceRef.current!.setState(state);
-		}
-	}, [state]);
+			/**
+			 * The div element will be replaced during calling `SakanaWidget.mount`
+			 * @see https://github.com/dsrkafuu/sakana-widget/blob/69dbdd85688425ece3f17c1abc7c92effe842704/src/index.ts#L665C28-L665C28
+			 */
+			const div = document.createElement("div");
+			divElementRef.current!.replaceChildren(div);
+			instance.mount(div);
 
-	return <div ref={ref} {...divAttrs} />;
-};
+			if (disableBounceOnMount) {
+				instance.setState({ r: 0, y: 0.06 });
+			}
+
+			instanceRef.current = instance;
+			const refCleanup = assignRef(widgetRef, instance);
+
+			return () => {
+				if (typeof refCleanup === "function") {
+					refCleanup();
+				} else {
+					assignRef(widgetRef, null);
+				}
+				if (!hasUnmounted) {
+					instance.unmount();
+				}
+			};
+		}, [disableBounceOnMount, stableOptions]);
+
+		return <div ref={useMergeRefs(divElementRef, ref)} {...divAttrs} />;
+	},
+);
+
+export { SakanaWidgetReact, SakanaWidgetReact as SakanaWidget };

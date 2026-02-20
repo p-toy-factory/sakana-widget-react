@@ -66,6 +66,31 @@ export interface SakanaWidgetProps extends DivElementAttributes {
 }
 ```
 
+### Programmatic Control
+
+Use `widgetRef` to access the underlying `SakanaWidget` instance:
+
+```tsx
+import { useRef } from "react";
+import type SakanaWidgetClass from "sakana-widget";
+import { SakanaWidget } from "sakana-widget-react";
+
+function App() {
+	const widgetRef = useRef<SakanaWidgetClass>(null);
+
+	const handleClick = () => {
+		widgetRef.current?.setState({ r: 1, y: 0.2 });
+	};
+
+	return (
+		<>
+			<button onClick={handleClick}>Bounce!</button>
+			<SakanaWidget widgetRef={widgetRef} />
+		</>
+	);
+}
+```
+
 ## License
 
 Released under MIT License, please note that the 2 default images **should not be used for any commercial activities**. This project used to be a secondary development based on [Sakana! Widget](https://github.com/dsrkafuu/sakana-widget).
