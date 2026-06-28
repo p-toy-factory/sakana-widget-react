@@ -10,10 +10,7 @@ export const useStructurallyStableValue = <T>(passthrough: T): T => {
 		prevPassthrough: passthrough,
 	}));
 
-	if (
-		Object.is(passthrough, prevPassthrough) ||
-		Object.is(passthrough, cachedReference)
-	) {
+	if (Object.is(passthrough, prevPassthrough) || Object.is(passthrough, cachedReference)) {
 		return cachedReference;
 	}
 

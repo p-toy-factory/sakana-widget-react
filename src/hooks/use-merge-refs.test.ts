@@ -59,9 +59,7 @@ describe(useMergeRefs.name, () => {
 		const callbackRef1 = vi.fn();
 		const callbackRef2 = vi.fn();
 
-		const { result } = renderHook(() =>
-			useMergeRefs(callbackRef1, callbackRef2),
-		);
+		const { result } = renderHook(() => useMergeRefs(callbackRef1, callbackRef2));
 
 		const instance: MockElement = { id: "test" };
 		result.current?.(instance);

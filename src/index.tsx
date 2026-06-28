@@ -1,12 +1,6 @@
 "use client";
 
-import {
-	type DetailedHTMLProps,
-	forwardRef,
-	type HTMLAttributes,
-	type Ref,
-	useRef,
-} from "react";
+import { type DetailedHTMLProps, forwardRef, type HTMLAttributes, type Ref, useRef } from "react";
 import SakanaWidget, { type SakanaWidgetOptions } from "sakana-widget";
 import { useIsomorphicLayoutEffect } from "./hooks/use-isomorphic-layout-effect";
 
@@ -27,13 +21,7 @@ export interface SakanaWidgetProps extends DivElementAttributes {
 
 const SakanaWidgetReact = forwardRef<HTMLDivElement, SakanaWidgetProps>(
 	function SakanaWidgetReact(props, ref) {
-		const {
-			className,
-			disableBounceOnMount = false,
-			widgetRef,
-			options,
-			...divAttrs
-		} = props;
+		const { className, disableBounceOnMount = false, widgetRef, options, ...divAttrs } = props;
 		const divElementRef = useRef<HTMLDivElement>(null);
 		const instanceRef = useRef<SakanaWidget>();
 		const stableOptions = useStructurallyStableValue(options);
@@ -57,8 +45,7 @@ const SakanaWidgetReact = forwardRef<HTMLDivElement, SakanaWidgetProps>(
 				"a.sakana-widget-ctrl-item",
 			);
 			if (githubIconDom) {
-				githubIconDom.href =
-					"https://github.com/p-toy-factory/sakana-widget-react";
+				githubIconDom.href = "https://github.com/p-toy-factory/sakana-widget-react";
 			}
 			// #endregion
 

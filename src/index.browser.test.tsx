@@ -5,10 +5,7 @@ import { useRef } from "react";
 import type SakanaWidgetClass from "sakana-widget";
 import { describe, expect, test } from "vitest";
 import { page } from "vitest/browser";
-import {
-	type ComponentRenderOptions,
-	render as baseRender,
-} from "vitest-browser-react";
+import { type ComponentRenderOptions, render as baseRender } from "vitest-browser-react";
 
 import { SakanaWidget } from "./index";
 
@@ -104,16 +101,10 @@ describe("SakanaWidget", () => {
 
 	test("div attribute passthrough — extra HTML attributes forwarded to container div", async () => {
 		const { container } = await render(
-			<SakanaWidget
-				style={{ position: "fixed" }}
-				data-testid="sakana"
-				id="widget-1"
-			/>,
+			<SakanaWidget style={{ position: "fixed" }} data-testid="sakana" id="widget-1" />,
 		);
 
-		const div = container.querySelector(
-			"[data-testid='sakana']",
-		) as HTMLDivElement;
+		const div = container.querySelector("[data-testid='sakana']") as HTMLDivElement;
 		expect(div.style.position).toBe("fixed");
 		expect(div.dataset.testid).toBe("sakana");
 		expect(div.id).toBe("widget-1");
@@ -121,13 +112,9 @@ describe("SakanaWidget", () => {
 
 	describe.skip("visual regression", () => {
 		test("default rendering — chisato character", async () => {
-			await render(
-				<SakanaWidget disableBounceOnMount data-testid="sakana-widget" />,
-			);
+			await render(<SakanaWidget disableBounceOnMount data-testid="sakana-widget" />);
 
-			await expect(page.getByTestId("sakana-widget")).toMatchScreenshot(
-				"default-chisato",
-			);
+			await expect(page.getByTestId("sakana-widget")).toMatchScreenshot("default-chisato");
 		});
 
 		test("takina character", async () => {
@@ -139,23 +126,15 @@ describe("SakanaWidget", () => {
 				/>,
 			);
 
-			await expect(page.getByTestId("sakana-widget")).toMatchScreenshot(
-				"takina",
-			);
+			await expect(page.getByTestId("sakana-widget")).toMatchScreenshot("takina");
 		});
 
 		test("custom size", async () => {
 			await render(
-				<SakanaWidget
-					disableBounceOnMount
-					data-testid="sakana-widget"
-					options={{ size: 100 }}
-				/>,
+				<SakanaWidget disableBounceOnMount data-testid="sakana-widget" options={{ size: 100 }} />,
 			);
 
-			await expect(page.getByTestId("sakana-widget")).toMatchScreenshot(
-				"custom-size-100",
-			);
+			await expect(page.getByTestId("sakana-widget")).toMatchScreenshot("custom-size-100");
 		});
 
 		test("controls hidden", async () => {
@@ -167,9 +146,7 @@ describe("SakanaWidget", () => {
 				/>,
 			);
 
-			await expect(page.getByTestId("sakana-widget")).toMatchScreenshot(
-				"controls-hidden",
-			);
+			await expect(page.getByTestId("sakana-widget")).toMatchScreenshot("controls-hidden");
 		});
 	});
 });

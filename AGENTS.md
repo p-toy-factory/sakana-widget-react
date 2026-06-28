@@ -15,13 +15,14 @@ pnpm install          # Install dependencies
 pnpm run dev          # Development (Storybook on port 6006)
 pnpm run build        # Build library (outputs to dist/)
 pnpm run test         # Run tests
-pnpm run format:fix   # Format code
+pnpm run fmt          # Format code
+pnpm run fmt:check    # Check formatting
 pnpm run lint:fix     # Lint code
 ```
 
 ## Code Style
 
-- **Formatter**: Biome (`pnpm run format:fix`)
+- **Formatter**: Oxfmt (`pnpm run fmt`)
 - **Linter**: ESLint with `eslint-config-pcp` (`pnpm run lint:fix`)
 - **Indentation**: Tabs for source code (JS/TS/TSX use 2-space width); spaces for JSON/YAML (2-space)
 - **Hook rule**: `useIsomorphicLayoutEffect` is registered as an additional hook in `react-hooks/exhaustive-deps`

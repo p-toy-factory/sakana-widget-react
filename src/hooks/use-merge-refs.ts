@@ -9,10 +9,7 @@ import {
 
 type CleanupFunction = () => void;
 
-export function assignRef<T>(
-	ref: Ref<T> | undefined,
-	instance: T,
-): CleanupFunction | undefined {
+export function assignRef<T>(ref: Ref<T> | undefined, instance: T): CleanupFunction | undefined {
 	if (ref) {
 		if (typeof ref === "function") {
 			return ref(instance) as CleanupFunction | undefined;
@@ -73,13 +70,11 @@ export const useMergeRefs = <Instance>(
 		return (value) => {
 			if (cleanupRef.current) {
 				cleanupRef.current();
-				(cleanupRef as MutableRefObject<(() => void) | void>).current =
-					undefined;
+				(cleanupRef as MutableRefObject<(() => void) | void>).current = undefined;
 			}
 
 			if (value !== null) {
-				(cleanupRef as MutableRefObject<(() => void) | void>).current =
-					refEffect(value);
+				(cleanupRef as MutableRefObject<(() => void) | void>).current = refEffect(value);
 			}
 		};
 	}, [memoizedRefs, refEffect]);
