@@ -1,6 +1,6 @@
 # Tooling
 
-- **Package Manager**: pnpm (version specified in `packageManager` field of `package.json`)
+- **Package Manager**: pnpm (repo-managed)
 - **Node**: version specified in `.nvmrc`
 - **Formatter**: Oxfmt
 - **Linter**: ESLint with `eslint-config-pcp`

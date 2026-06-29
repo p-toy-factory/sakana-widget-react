@@ -99,4 +99,4 @@ Image source: 大伏アオ [@blue00f4](https://twitter.com/blue00f4) [pixiv](htt
 
 ## Contributing
 
-See [CONTRIBUTING.md](https://github.com/p-toy-factory/sakana-widget-react/blob/main/CONTRIBUTING.md).
+See [CONTRIBUTING.md](https://github.com/p-toy-factory/sakana-widget-react/blob/main/CONTRIBUTING.md) for the repo-managed `pnpm` workflow.

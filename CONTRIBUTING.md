@@ -2,7 +2,7 @@
 
 ## Setup
 
-Install dependencies using [pnpm](https://pnpm.io/)
+Install dependencies with the repo-managed [pnpm](https://pnpm.io/)
 
 ```
 pnpm install
