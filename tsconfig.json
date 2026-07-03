@@ -1,8 +1,10 @@
 {
   "extends": "@pinkchampagne/tsconfig",
   "compilerOptions": {
+    "declarationMap": true,
     "jsx": "react-jsx",
     "moduleResolution": "bundler",
-    "noUncheckedIndexedAccess": true
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true
   }
 }

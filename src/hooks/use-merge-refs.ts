@@ -30,7 +30,7 @@ export const useMergeRefs = <Instance>(
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const memoizedRefs = useMemo(() => refs, refs);
 
-	const cleanupRef = useRef<() => void>();
+	const cleanupRef = useRef<CleanupFunction | undefined>(undefined);
 
 	const refEffect = useCallback(
 		(instance: Instance) => {
@@ -41,7 +41,7 @@ export const useMergeRefs = <Instance>(
 
 				if (typeof ref === "function") {
 					const refCallback = ref;
-					const refCleanup: (() => void) | void = refCallback(instance);
+					const refCleanup = refCallback(instance);
 					return typeof refCleanup === "function"
 						? refCleanup
 						: () => {
@@ -70,11 +70,11 @@ export const useMergeRefs = <Instance>(
 		return (value) => {
 			if (cleanupRef.current) {
 				cleanupRef.current();
-				(cleanupRef as MutableRefObject<(() => void) | void>).current = undefined;
+				cleanupRef.current = undefined;
 			}
 
 			if (value !== null) {
-				(cleanupRef as MutableRefObject<(() => void) | void>).current = refEffect(value);
+				cleanupRef.current = refEffect(value);
 			}
 		};
 	}, [memoizedRefs, refEffect]);

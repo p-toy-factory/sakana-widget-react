@@ -21,9 +21,9 @@ export interface SakanaWidgetProps extends DivElementAttributes {
 
 const SakanaWidgetReact = forwardRef<HTMLDivElement, SakanaWidgetProps>(
 	function SakanaWidgetReact(props, ref) {
-		const { className, disableBounceOnMount = false, widgetRef, options, ...divAttrs } = props;
+		const { disableBounceOnMount = false, widgetRef, options, ...divAttrs } = props;
 		const divElementRef = useRef<HTMLDivElement>(null);
-		const instanceRef = useRef<SakanaWidget>();
+		const instanceRef = useRef<SakanaWidget | null>(null);
 		const stableOptions = useStructurallyStableValue(options);
 
 		useIsomorphicLayoutEffect(() => {
@@ -76,7 +76,7 @@ const SakanaWidgetReact = forwardRef<HTMLDivElement, SakanaWidgetProps>(
 			};
 		}, [disableBounceOnMount, stableOptions]);
 
-		return <div ref={useMergeRefs(divElementRef, ref)} className={className} {...divAttrs} />;
+		return <div ref={useMergeRefs(divElementRef, ref)} {...divAttrs} />;
 	},
 );
 

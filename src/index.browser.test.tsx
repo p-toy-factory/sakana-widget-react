@@ -43,7 +43,7 @@ describe("SakanaWidget", () => {
 		let instance: SakanaWidgetClass | null = null;
 
 		function Widget() {
-			const ref = useRef<SakanaWidgetClass>(null);
+			const ref = useRef<SakanaWidgetClass | null>(null);
 			instance = ref.current;
 			return <SakanaWidget widgetRef={ref} />;
 		}
@@ -62,7 +62,7 @@ describe("SakanaWidget", () => {
 		let instance: SakanaWidgetClass | null = null;
 
 		function Widget({ size }: { size: number }) {
-			const ref = useRef<SakanaWidgetClass>(null);
+			const ref = useRef<SakanaWidgetClass | null>(null);
 			instance = ref.current;
 			return <SakanaWidget widgetRef={ref} options={{ size }} />;
 		}
@@ -83,7 +83,7 @@ describe("SakanaWidget", () => {
 		let instance: SakanaWidgetClass | null = null;
 
 		function Widget({ size }: { size: number }) {
-			const ref = useRef<SakanaWidgetClass>(null);
+			const ref = useRef<SakanaWidgetClass | null>(null);
 			instance = ref.current;
 			return <SakanaWidget widgetRef={ref} options={{ size }} />;
 		}

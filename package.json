@@ -18,7 +18,11 @@
   },
   "files": [
     "dist",
-    "skills"
+    "skills",
+    "src/index.tsx",
+    "src/hooks/use-isomorphic-layout-effect.ts",
+    "src/hooks/use-merge-refs.ts",
+    "src/hooks/use-structurally-stable-value.ts"
   ],
   "type": "module",
   "sideEffects": false,
@@ -35,6 +39,7 @@
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
     "prepublish": "pnpm run build",
+    "typecheck": "tsc --noEmit",
     "storybook": "storybook dev -p 6006",
     "test": "vitest",
     "test:browser": "pnpm run test --project browser"
@@ -48,14 +53,15 @@
     "@testing-library/react-hooks": "^8.0.1",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
+    "@types/react-test-renderer": "^18.3.1",
     "@vitejs/plugin-react": "^5.1.4",
     "@vitest/browser-playwright": "^4.1.9",
-    "oxlint": "^1.0.0",
     "oxfmt": "^0.56.0",
+    "oxlint": "^1.0.0",
     "react-test-renderer": "^18.3.1",
     "storybook": "^10.2.8",
-    "tsdown": "^0.20.3",
-    "typescript": "^5.9.3",
+    "tsdown": "^0.22.3",
+    "typescript": "6.0.3",
     "vitest": "^4.1.9",
     "vitest-browser-react": "^2.2.0"
   },

@@ -13,7 +13,7 @@ For upstream sakana-widget documentation, see `node_modules/sakana-widget/README
 ```bash
 pnpm install          # Install dependencies
 pnpm run dev          # Development (Storybook on port 6006)
-pnpm run build        # Build library (outputs to dist/)
+pnpm run build        # Build library (outputs to dist/ with declaration maps)
 pnpm run test         # Run tests
 pnpm run fmt          # Format code
 pnpm run fmt:check    # Check formatting
@@ -65,8 +65,12 @@ This package ships an [Agent Skill](https://agentskills.io) following the
 - `skills/sakana-widget-react/SKILL.md` — Usage skill for the SakanaWidget
   React component
 
-The `skills/` directory is included in the npm package via the `files` field in
-`package.json`. When updating the component API, keep `SKILL.md` in sync.
+The npm package publishes `dist/`, `skills/`, and the minimal `src/` TypeScript
+sources needed by declaration maps so IDEs can jump from `dist/*.d.ts` back to
+package-local sources. Those `src/*` paths are shipped for tooling support only
+and are not part of the public import surface. When updating the component API,
+keep `SKILL.md` in sync and ensure the published source-file allowlist still
+matches the declaration-map closure.
 
 ## Maintenance
 
