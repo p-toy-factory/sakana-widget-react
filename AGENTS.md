@@ -23,9 +23,9 @@ pnpm run lint:fix     # Lint code
 ## Code Style
 
 - **Formatter**: Oxfmt (`pnpm run fmt`)
-- **Linter**: ESLint with `eslint-config-pcp` (`pnpm run lint:fix`)
+- **Linter**: Oxlint (`pnpm run lint:fix`)
 - **Indentation**: Tabs for source code (JS/TS/TSX use 2-space width); spaces for JSON/YAML (2-space)
-- **Hook rule**: `useIsomorphicLayoutEffect` is registered as an additional hook in `react-hooks/exhaustive-deps`
+  - `useIsomorphicLayoutEffect` is still the repo's custom layout-effect hook, but linting no longer depends on ESLint-specific hook configuration
 
 ## Testing
 

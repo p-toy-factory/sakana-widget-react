@@ -76,7 +76,7 @@ const SakanaWidgetReact = forwardRef<HTMLDivElement, SakanaWidgetProps>(
 			};
 		}, [disableBounceOnMount, stableOptions]);
 
-		return <div ref={useMergeRefs(divElementRef, ref)} {...divAttrs} />;
+		return <div ref={useMergeRefs(divElementRef, ref)} className={className} {...divAttrs} />;
 	},
 );
 
