@@ -1,5 +1,4 @@
-/* eslint-disable @eslint-react/no-create-ref */
-import { renderHook } from "@testing-library/react-hooks/native";
+import { renderHook } from "@testing-library/react";
 import type { MutableRefObject } from "react";
 import { describe, expect, test, vi } from "vitest";
 

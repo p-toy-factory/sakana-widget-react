@@ -7,6 +7,7 @@ export default defineConfig({
 		projects: [
 			{
 				test: {
+					environment: "happy-dom",
 					include: ["./src/**/*.test.{ts,tsx}"],
 					exclude: ["./src/**/*.browser.test.{ts,tsx}"],
 				},

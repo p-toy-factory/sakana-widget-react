@@ -1,11 +1,4 @@
-import {
-	type MutableRefObject,
-	type Ref,
-	type RefCallback,
-	useCallback,
-	useMemo,
-	useRef,
-} from "react";
+import { type Ref, type RefCallback, type RefObject, useCallback, useMemo, useRef } from "react";
 
 type CleanupFunction = () => void;
 
@@ -14,7 +7,7 @@ export function assignRef<T>(ref: Ref<T> | undefined, instance: T): CleanupFunct
 		if (typeof ref === "function") {
 			return ref(instance) as CleanupFunction | undefined;
 		}
-		(ref as MutableRefObject<T>).current = instance;
+		(ref as RefObject<T>).current = instance;
 	}
 	return undefined;
 }
@@ -49,9 +42,9 @@ export const useMergeRefs = <Instance>(
 							};
 				}
 
-				(ref as MutableRefObject<Instance | null>).current = instance;
+				(ref as RefObject<Instance | null>).current = instance;
 				return () => {
-					(ref as MutableRefObject<Instance | null>).current = null;
+					(ref as RefObject<Instance | null>).current = null;
 				};
 			});
 

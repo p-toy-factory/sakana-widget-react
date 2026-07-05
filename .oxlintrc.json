@@ -1,55 +1,55 @@
 {
-	"$schema": "./node_modules/oxlint/configuration_schema.json",
-	"plugins": [
-		"typescript",
-		"unicorn",
-		"react",
-		"react-perf",
-		"oxc",
-		"import",
-		"jsdoc",
-		"node",
-		"promise",
-		"vitest"
-	],
-	"env": {
-		"browser": true,
-		"node": true
-	},
-	"categories": {
-		"correctness": "error",
-		"perf": "error"
-	},
-	"rules": {
-		"no-console": "error",
-		"curly": ["error", "multi-line"],
-		"prefer-const": ["error", { "destructuring": "all" }],
-		"prefer-destructuring": [
-			"error",
-			{
-				"VariableDeclarator": { "array": false, "object": true }
-			}
-		],
-		"unicode-bom": ["error", "never"],
-		"typescript/consistent-indexed-object-style": ["error", "record"],
-		"typescript/ban-ts-comment": ["error", { "ts-expect-error": "allow-with-description" }],
-		"vitest/valid-title": "off",
-		"vitest/require-mock-type-parameters": "off",
-		"vitest/prefer-snapshot-hint": "off"
-	},
-	"overrides": [
-		{
-			"files": ["src/**/*.stories.tsx", "src/**/*.browser.test.tsx"],
-			"rules": {
-				"react-perf/jsx-no-new-function-as-prop": "off",
-				"react-perf/jsx-no-new-object-as-prop": "off"
-			}
-		},
-		{
-			"files": ["src/**/*.browser.test.tsx"],
-			"rules": {
-				"vitest/no-disabled-tests": "off"
-			}
-		}
-	]
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "typescript",
+    "unicorn",
+    "react",
+    "react-perf",
+    "oxc",
+    "import",
+    "jsdoc",
+    "node",
+    "promise",
+    "vitest"
+  ],
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "categories": {
+    "correctness": "error",
+    "perf": "error"
+  },
+  "rules": {
+    "no-console": "error",
+    "curly": ["error", "multi-line"],
+    "prefer-const": ["error", { "destructuring": "all" }],
+    "prefer-destructuring": [
+      "error",
+      {
+        "VariableDeclarator": { "array": false, "object": true }
+      }
+    ],
+    "unicode-bom": ["error", "never"],
+    "typescript/consistent-indexed-object-style": ["error", "record"],
+    "typescript/ban-ts-comment": ["error", { "ts-expect-error": "allow-with-description" }],
+    "vitest/valid-title": "off",
+    "vitest/require-mock-type-parameters": "off",
+    "vitest/prefer-snapshot-hint": "off"
+  },
+  "overrides": [
+    {
+      "files": ["src/**/*.stories.tsx", "src/**/*.browser.test.tsx"],
+      "rules": {
+        "react-perf/jsx-no-new-function-as-prop": "off",
+        "react-perf/jsx-no-new-object-as-prop": "off"
+      }
+    },
+    {
+      "files": ["src/**/*.browser.test.tsx"],
+      "rules": {
+        "vitest/no-disabled-tests": "off"
+      }
+    }
+  ]
 }
