@@ -1,15 +1,14 @@
 import "sakana-widget/lib/index.css";
 
-import type { ReactNode } from "react";
+import type { PropsWithChildren, ReactNode } from "react";
 import { useRef } from "react";
-import type SakanaWidgetClass from "sakana-widget";
 import { describe, expect, test } from "vitest";
 import { page } from "vitest/browser";
 import { type ComponentRenderOptions, render as baseRender } from "vitest-browser-react";
 
-import { SakanaWidget } from "./index";
+import { SakanaWidget, type SakanaWidgetApi } from "./index";
 
-function Wrapper({ children }: { children: ReactNode }) {
+function Wrapper({ children }: PropsWithChildren) {
 	return (
 		<div
 			style={{
@@ -29,7 +28,7 @@ function render(ui: ReactNode, options?: ComponentRenderOptions) {
 }
 
 describe("SakanaWidget", () => {
-	test("unmount cleanup — widget DOM removed from container", async () => {
+	test("unmount cleanup - widget DOM removed from container", async () => {
 		const { container, unmount } = await render(<SakanaWidget />);
 
 		expect(container.innerHTML).not.toBe("");
@@ -39,30 +38,11 @@ describe("SakanaWidget", () => {
 		expect(container.innerHTML).toBe("");
 	});
 
-	test("double-unmount protection — no error when widget already unmounted externally", async () => {
-		let instance: SakanaWidgetClass | null = null;
-
-		function Widget() {
-			const ref = useRef<SakanaWidgetClass | null>(null);
-			instance = ref.current;
-			return <SakanaWidget widgetRef={ref} />;
-		}
-
-		const { unmount, rerender } = await render(<Widget />);
-		// After first render, ref is not yet assigned; rerender to capture it
-		await rerender(<Widget />);
-
-		expect(instance).toBeTruthy();
-		instance!.unmount();
-
-		expect(() => unmount()).not.toThrow();
-	});
-
-	test("re-instantiation on structural change — new instance when options change", async () => {
-		let instance: SakanaWidgetClass | null = null;
+	test("re-instantiation on structural change - new instance when options change", async () => {
+		let instance: SakanaWidgetApi | null = null;
 
 		function Widget({ size }: { size: number }) {
-			const ref = useRef<SakanaWidgetClass | null>(null);
+			const ref = useRef<SakanaWidgetApi | null>(null);
 			instance = ref.current;
 			return <SakanaWidget widgetRef={ref} options={{ size }} />;
 		}
@@ -79,11 +59,11 @@ describe("SakanaWidget", () => {
 		expect(instance).not.toBe(firstInstance);
 	});
 
-	test("no re-instantiation on referential change — same instance for structurally equal options", async () => {
-		let instance: SakanaWidgetClass | null = null;
+	test("no re-instantiation on referential change - same instance for structurally equal options", async () => {
+		let instance: SakanaWidgetApi | null = null;
 
 		function Widget({ size }: { size: number }) {
-			const ref = useRef<SakanaWidgetClass | null>(null);
+			const ref = useRef<SakanaWidgetApi | null>(null);
 			instance = ref.current;
 			return <SakanaWidget widgetRef={ref} options={{ size }} />;
 		}
@@ -99,7 +79,7 @@ describe("SakanaWidget", () => {
 		expect(instance).toBe(firstInstance);
 	});
 
-	test("div attribute passthrough — extra HTML attributes forwarded to container div", async () => {
+	test("div attribute passthrough - extra HTML attributes forwarded to container div", async () => {
 		const { container } = await render(
 			<SakanaWidget style={{ position: "fixed" }} data-testid="sakana" id="widget-1" />,
 		);
@@ -110,8 +90,9 @@ describe("SakanaWidget", () => {
 		expect(div.id).toBe("widget-1");
 	});
 
+	// oxlint-disable-next-line vitest/no-disabled-tests
 	describe.skip("visual regression", () => {
-		test("default rendering — chisato character", async () => {
+		test("default rendering - chisato character", async () => {
 			await render(<SakanaWidget disableBounceOnMount data-testid="sakana-widget" />);
 
 			await expect(page.getByTestId("sakana-widget")).toMatchScreenshot("default-chisato");

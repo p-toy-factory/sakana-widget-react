@@ -51,7 +51,7 @@ import { SakanaWidgetReact } from "sakana-widget-react";
 ```ts
 import { type DetailedHTMLProps, type HTMLAttributes, type Ref } from "react";
 import type SakanaWidget from "sakana-widget";
-import { SakanaWidgetOptions } from "sakana-widget";
+import type { SakanaWidgetOptions } from "sakana-widget";
 
 type DivElementAttributes = Omit<
 	DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
@@ -61,22 +61,24 @@ type DivElementAttributes = Omit<
 export interface SakanaWidgetProps extends DivElementAttributes {
 	/** @default false */
 	disableBounceOnMount?: boolean;
-	widgetRef?: Ref<SakanaWidget>;
+	widgetRef?: Ref<SakanaWidgetApi>;
 	options?: SakanaWidgetOptions;
 }
+
+export type SakanaWidgetApi = Omit<SakanaWidget, "mount" | "unmount">;
 ```
 
 ### Programmatic Control
 
-Use `widgetRef` to access the underlying `SakanaWidget` instance:
+Use `widgetRef` to access the public widget handle. React owns the widget lifecycle, so
+the TypeScript handle type omits `mount` and `unmount`:
 
 ```tsx
 import { useRef } from "react";
-import type SakanaWidgetClass from "sakana-widget";
-import { SakanaWidget } from "sakana-widget-react";
+import { SakanaWidget, type SakanaWidgetApi } from "sakana-widget-react";
 
 function App() {
-	const widgetRef = useRef<SakanaWidgetClass>(null);
+	const widgetRef = useRef<SakanaWidgetApi>(null);
 
 	const handleClick = () => {
 		widgetRef.current?.setState({ r: 1, y: 0.2 });

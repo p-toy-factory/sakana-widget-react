@@ -12,10 +12,12 @@ type DivElementAttributes = Omit<
 	"key" | "ref"
 >;
 
+export type SakanaWidgetApi = Omit<SakanaWidget, "mount" | "unmount">;
+
 export interface SakanaWidgetProps extends DivElementAttributes {
 	/** @default false */
 	disableBounceOnMount?: boolean;
-	widgetRef?: Ref<SakanaWidget>;
+	widgetRef?: Ref<SakanaWidgetApi>;
 	options?: SakanaWidgetOptions;
 }
 
@@ -23,20 +25,10 @@ const SakanaWidgetReact = forwardRef<HTMLDivElement, SakanaWidgetProps>(
 	function SakanaWidgetReact(props, ref) {
 		const { disableBounceOnMount = false, widgetRef, options, ...divAttrs } = props;
 		const divElementRef = useRef<HTMLDivElement>(null);
-		const instanceRef = useRef<SakanaWidget | null>(null);
 		const stableOptions = useStructurallyStableValue(options);
 
 		useIsomorphicLayoutEffect(() => {
-			let hasUnmounted = false;
-			const originalInstance = new SakanaWidget(stableOptions);
-			const instance = Object.create(originalInstance, {
-				unmount: {
-					value: () => {
-						hasUnmounted = true;
-						originalInstance.unmount();
-					},
-				},
-			}) as SakanaWidget;
+			const instance = new SakanaWidget(stableOptions);
 
 			// #region Change GitHub icon link
 			// @ts-expect-error Get private property
@@ -61,8 +53,7 @@ const SakanaWidgetReact = forwardRef<HTMLDivElement, SakanaWidgetProps>(
 				instance.setState({ r: 0, y: 0.06 });
 			}
 
-			instanceRef.current = instance;
-			const refCleanup = assignRef(widgetRef, instance);
+			const refCleanup = assignRef(widgetRef, instance as SakanaWidgetApi);
 
 			return () => {
 				if (typeof refCleanup === "function") {
@@ -70,9 +61,7 @@ const SakanaWidgetReact = forwardRef<HTMLDivElement, SakanaWidgetProps>(
 				} else {
 					assignRef(widgetRef, null);
 				}
-				if (!hasUnmounted) {
-					instance.unmount();
-				}
+				instance.unmount();
 			};
 		}, [disableBounceOnMount, stableOptions]);
 

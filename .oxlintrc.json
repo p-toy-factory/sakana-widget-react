@@ -31,11 +31,8 @@
       }
     ],
     "unicode-bom": ["error", "never"],
-    "typescript/consistent-indexed-object-style": ["error", "record"],
     "typescript/ban-ts-comment": ["error", { "ts-expect-error": "allow-with-description" }],
     "vitest/valid-title": "off",
-    "vitest/require-mock-type-parameters": "off",
-    "vitest/prefer-snapshot-hint": "off"
   },
   "overrides": [
     {
@@ -45,11 +42,5 @@
         "react-perf/jsx-no-new-object-as-prop": "off"
       }
     },
-    {
-      "files": ["src/**/*.browser.test.tsx"],
-      "rules": {
-        "vitest/no-disabled-tests": "off"
-      }
-    }
   ]
 }

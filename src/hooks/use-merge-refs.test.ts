@@ -12,6 +12,7 @@ function createRef<T>(): MutableRefObject<T | null> {
 
 describe(assignRef.name, () => {
 	test("should call callback ref with instance", () => {
+		// oxlint-disable-next-line vitest/require-mock-type-parameters
 		const callbackRef = vi.fn();
 		const instance = { value: "test" };
 
@@ -37,7 +38,9 @@ describe(assignRef.name, () => {
 	});
 
 	test("should return cleanup function from callback ref", () => {
+		// oxlint-disable-next-line vitest/require-mock-type-parameters
 		const cleanup = vi.fn();
+		// oxlint-disable-next-line vitest/require-mock-type-parameters
 		const callbackRef = vi.fn(() => cleanup);
 		const instance = { value: "test" };
 
@@ -55,7 +58,9 @@ describe(useMergeRefs.name, () => {
 	});
 
 	test("should merge callback refs", () => {
+		// oxlint-disable-next-line vitest/require-mock-type-parameters
 		const callbackRef1 = vi.fn();
+		// oxlint-disable-next-line vitest/require-mock-type-parameters
 		const callbackRef2 = vi.fn();
 
 		const { result } = renderHook(() => useMergeRefs(callbackRef1, callbackRef2));
@@ -81,6 +86,7 @@ describe(useMergeRefs.name, () => {
 	});
 
 	test("should merge mixed refs", () => {
+		// oxlint-disable-next-line vitest/require-mock-type-parameters
 		const callbackRef = vi.fn();
 		const objectRef = createRef<MockElement>();
 
@@ -94,7 +100,9 @@ describe(useMergeRefs.name, () => {
 	});
 
 	test("should call cleanup functions on unmount", () => {
+		// oxlint-disable-next-line vitest/require-mock-type-parameters
 		const cleanup = vi.fn();
+		// oxlint-disable-next-line vitest/require-mock-type-parameters
 		const callbackRef = vi.fn(() => cleanup);
 		const objectRef = createRef<MockElement>();
 
@@ -111,7 +119,9 @@ describe(useMergeRefs.name, () => {
 	});
 
 	test("should handle ref cleanup when instance changes", () => {
+		// oxlint-disable-next-line vitest/require-mock-type-parameters
 		const cleanup = vi.fn();
+		// oxlint-disable-next-line vitest/require-mock-type-parameters
 		const callbackRef = vi.fn(() => cleanup);
 
 		const { result } = renderHook(() => useMergeRefs(callbackRef));
@@ -128,6 +138,7 @@ describe(useMergeRefs.name, () => {
 	});
 
 	test("should maintain referential stability", () => {
+		// oxlint-disable-next-line vitest/require-mock-type-parameters
 		const callbackRef = vi.fn();
 
 		const { result, rerender } = renderHook(() => useMergeRefs(callbackRef));

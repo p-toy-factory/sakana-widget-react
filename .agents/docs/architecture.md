@@ -23,4 +23,9 @@ Uses the `useStructurallyStableValue` hook with `dequal` for deep equality compa
 The component exposes:
 
 - `ref` — the container `<div>` element
-- `widgetRef` prop — the SakanaWidget instance, for external programmatic control
+- `widgetRef` prop — a public `SakanaWidgetApi` for programmatic control
+
+`SakanaWidgetApi` is the upstream `SakanaWidget` type with `mount` and `unmount`
+omitted. The runtime ref value is still the original upstream instance, but React owns
+the widget lifecycle and the public TypeScript handle points consumers toward runtime
+controls such as `setState`, `setCharacter`, `nextCharacter`, and `triggerAutoMode`.
