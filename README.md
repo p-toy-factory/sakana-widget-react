@@ -11,16 +11,18 @@ A [React](https://react.dev/) component that wrap [Sakana! Widget](https://githu
 ### Install
 
 ```
-npm install sakana-widget-react sakana-widget@2.7.1
+npm install sakana-widget-react sakana-widget@^3.0.0
 ```
+
+`sakana-widget` 2.7.1 is also supported.
 
 ### Import CSS
 
-See [usage of Sanaka! Widget's README](https://github.com/dsrkafuu/sakana-widget/tree/main?tab=readme-ov-file#usage), choose a method you prefer to import CSS.
+See [usage of Sakana! Widget's README](https://github.com/dsrkafuu/sakana-widget/tree/main?tab=readme-ov-file#usage), choose a method you prefer to import CSS.
 
 ### Use component
 
-`options` property of **SanakaWidget component** will be used as parameter of constructor of **SanakaWidget class**.
+`options` property of **SakanaWidget component** will be used as parameter of constructor of **SakanaWidget class**.
 
 ```tsx
 import { SakanaWidget } from "sakana-widget-react";
@@ -67,6 +69,12 @@ export interface SakanaWidgetProps extends DivElementAttributes {
 
 export type SakanaWidgetApi = Omit<SakanaWidget, "mount" | "unmount">;
 ```
+
+The component forwards standard `<div>` attributes to its root container and
+forwards the regular React `ref` to that container. Use `widgetRef` for the
+Sakana widget instance itself. React owns the widget lifecycle, so
+`SakanaWidgetApi` hides `mount` and `unmount` from TypeScript; the runtime value
+is still the upstream widget instance.
 
 ### Programmatic Control
 
