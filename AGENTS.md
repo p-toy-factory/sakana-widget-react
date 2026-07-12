@@ -14,10 +14,15 @@ For upstream sakana-widget documentation, see `node_modules/sakana-widget/README
 pnpm install          # Install dependencies
 pnpm run dev          # Development (Storybook on port 6006)
 pnpm run build        # Build library (outputs to dist/ with declaration maps)
+pnpm run build-storybook # Build the Storybook static site
 pnpm run test         # Run tests
+pnpm run test:browser # Run browser tests with Playwright
 pnpm run fmt          # Format code
 pnpm run fmt:check    # Check formatting
+pnpm run lint         # Lint code
 pnpm run lint:fix     # Lint code
+pnpm run typecheck    # Type-check without emitting files
+pnpm run storybook    # Start Storybook on port 6006
 ```
 
 ## Code Style
@@ -31,7 +36,7 @@ pnpm run lint:fix     # Lint code
 
 Two test projects run via Vitest (`pnpm run test`):
 
-- **Node tests** (`src/**/*.test.{ts,tsx}`) — unit tests using `@testing-library/react-hooks`
+- **Node tests** (`src/**/*.test.{ts,tsx}`) — unit tests using `@testing-library/react` and happy-dom
 - **Browser tests** (`src/**/*.browser.test.{ts,tsx}`) — integration tests using Playwright via `@vitest/browser-playwright`
 
 Run a specific test file:
