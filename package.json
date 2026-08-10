@@ -8,6 +8,7 @@
     "lycoris-recoil",
     "recoil",
     "takina",
+    "tanstack-intent",
     "widget"
   ],
   "license": "MIT",
@@ -19,10 +20,8 @@
   "files": [
     "dist",
     "skills",
-    "src/index.tsx",
-    "src/hooks/use-isomorphic-layout-effect.ts",
-    "src/hooks/use-merge-refs.ts",
-    "src/hooks/use-structurally-stable-value.ts"
+    "src/**/*.{tsx,ts}",
+    "!src/**/*.{test,stories}.{tsx,ts}"
   ],
   "type": "module",
   "sideEffects": false,
@@ -69,5 +68,5 @@
     "react-dom": "^18.2.0 || ^19.0.0",
     "sakana-widget": "^2.7.1 || ^3.0.0"
   },
-  "packageManager": "pnpm@11.7.0"
+  "packageManager": "pnpm@11.9.0"
 }

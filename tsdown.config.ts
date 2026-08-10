@@ -5,5 +5,5 @@ export default defineConfig({
 	entry: "src/index.tsx",
 	dts: true,
 	exports: true,
-	platform: "browser",
+	platform: "neutral",
 });
