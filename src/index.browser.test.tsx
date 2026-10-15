@@ -1,8 +1,6 @@
-import "sakana-widget/lib/index.css";
-
 import type { PropsWithChildren, ReactNode } from "react";
-import { createRef, useRef } from "react";
-import type UpstreamSakanaWidget from "sakana-widget";
+import { createRef, StrictMode } from "react";
+import type UpstreamSakanaWidget from "sakana-widget/core";
 import { describe, expect, test, vi } from "vitest";
 import { page } from "vitest/browser";
 import { type ComponentRenderOptions, render as baseRender } from "vitest-browser-react";
@@ -115,44 +113,141 @@ describe("SakanaWidget", () => {
 	);
 
 	test("re-instantiation on structural change - new instance when options change", async () => {
-		let instance: SakanaWidgetApi | null = null;
-
-		function Widget({ size }: { size: number }) {
-			const ref = useRef<SakanaWidgetApi | null>(null);
-			instance = ref.current;
-			return <SakanaWidget widgetRef={ref} options={{ size }} />;
-		}
-
-		const { rerender } = await render(<Widget size={200} />);
-		await rerender(<Widget size={200} />);
-		const firstInstance = instance;
+		const widgetRef = createRef<SakanaWidgetApi>();
+		const { rerender } = await render(
+			<SakanaWidget widgetRef={widgetRef} options={{ size: 200 }} />,
+		);
+		const firstInstance = widgetRef.current;
 		expect(firstInstance).toBeTruthy();
 
-		await rerender(<Widget size={300} />);
-		await rerender(<Widget size={300} />);
+		await rerender(<SakanaWidget widgetRef={widgetRef} options={{ size: 300 }} />);
 
-		expect(instance).toBeTruthy();
-		expect(instance).not.toBe(firstInstance);
+		expect(widgetRef.current).toBeTruthy();
+		expect(widgetRef.current).not.toBe(firstInstance);
 	});
 
-	test("no re-instantiation on referential change - same instance for structurally equal options", async () => {
-		let instance: SakanaWidgetApi | null = null;
-
-		function Widget({ size }: { size: number }) {
-			const ref = useRef<SakanaWidgetApi | null>(null);
-			instance = ref.current;
-			return <SakanaWidget widgetRef={ref} options={{ size }} />;
-		}
-
-		const { rerender } = await render(<Widget size={200} />);
-		await rerender(<Widget size={200} />);
-		const firstInstance = instance;
+	test("structurally equal nested options preserve the instance", async () => {
+		const widgetRef = createRef<SakanaWidgetApi>();
+		const options = { size: 200, stroke: { color: "red", width: 4 } };
+		const { rerender } = await render(<SakanaWidget widgetRef={widgetRef} options={options} />);
+		const firstInstance = widgetRef.current;
 		expect(firstInstance).toBeTruthy();
 
-		await rerender(<Widget size={200} />);
-		await rerender(<Widget size={200} />);
+		await rerender(
+			<SakanaWidget
+				widgetRef={widgetRef}
+				options={{ size: 200, stroke: { color: "red", width: 4 } }}
+			/>,
+		);
 
-		expect(instance).toBe(firstInstance);
+		expect(widgetRef.current).toBe(firstInstance);
+	});
+
+	test("keeps the forwarded host when replacing the widget", async () => {
+		const hostRef = createRef<HTMLDivElement>();
+		const widgetRef = createRef<SakanaWidgetApi>();
+		const { rerender, unmount } = await render(
+			<SakanaWidget ref={hostRef} widgetRef={widgetRef} options={{ size: 200 }} />,
+		);
+		const host = hostRef.current!;
+		const widgetNode = host.querySelector(".sakana-widget-wrapper")!;
+		expect(widgetNode.parentElement).toBe(host);
+
+		await rerender(<SakanaWidget ref={hostRef} widgetRef={widgetRef} options={{ size: 250 }} />);
+
+		expect(hostRef.current).toBe(host);
+		expect(widgetNode.parentElement).toBeNull();
+		expect(host.querySelectorAll(".sakana-widget-wrapper")).toHaveLength(1);
+		expect(host.querySelector(".sakana-widget-wrapper")?.parentElement).toBe(host);
+		await unmount();
+		expect(hostRef.current).toBeNull();
+		expect(widgetRef.current).toBeNull();
+	});
+
+	test("autoFit follows the host dimensions and subsequent resizing", async () => {
+		const widgetRef = createRef<SakanaWidgetApi>();
+		const { container, rerender } = await render(
+			<SakanaWidget
+				widgetRef={widgetRef}
+				options={{ autoFit: true }}
+				style={{ width: 300, height: 300 }}
+			/>,
+		);
+		const instance = widgetRef.current;
+		const app = container.querySelector<HTMLDivElement>(".sakana-widget-app")!;
+		await expect.poll(() => app.style.width).toBe("300px");
+		expect(app.style.height).toBe("300px");
+
+		await rerender(
+			<SakanaWidget
+				widgetRef={widgetRef}
+				options={{ autoFit: true }}
+				style={{ width: 420, height: 360 }}
+			/>,
+		);
+		await expect.poll(() => app.style.width).toBe("360px");
+		expect(app.style.height).toBe("360px");
+		expect(widgetRef.current).toBe(instance);
+	});
+
+	test("StrictMode leaves one working widget and cleans up its refs", async () => {
+		const hostRef = createRef<HTMLDivElement>();
+		const widgetRef = createRef<SakanaWidgetApi>();
+		const { unmount } = await render(
+			<StrictMode>
+				<SakanaWidget ref={hostRef} widgetRef={widgetRef} />
+			</StrictMode>,
+		);
+		const host = hostRef.current!;
+		expect(host.querySelectorAll(".sakana-widget-wrapper")).toHaveLength(1);
+		expect(widgetRef.current).toBeTruthy();
+		await page.getByRole("button", { name: "Auto Mode" }).click();
+		expect(host.querySelector("[aria-label='Auto Mode']")?.getAttribute("aria-pressed")).toBe(
+			"true",
+		);
+
+		await unmount();
+
+		expect(hostRef.current).toBeNull();
+		expect(widgetRef.current).toBeNull();
+		expect(host.querySelector(".sakana-widget-wrapper")).toBeNull();
+	});
+
+	test("imageFit is applied and updates through options", async () => {
+		const { container, rerender } = await render(
+			<SakanaWidget options={{ imageFit: "contain" }} />,
+		);
+		expect(getComputedStyle(container.querySelector(".sakana-widget-img")!).backgroundSize).toBe(
+			"contain",
+		);
+
+		await rerender(<SakanaWidget options={{ imageFit: "cover" }} />);
+
+		expect(getComputedStyle(container.querySelector(".sakana-widget-img")!).backgroundSize).toBe(
+			"cover",
+		);
+	});
+
+	test("custom controls added through widgetRef receive clicks and can be removed", async () => {
+		const widgetRef = createRef<SakanaWidgetApi>();
+		await render(<SakanaWidget widgetRef={widgetRef} />);
+		const onClick = vi.fn<(widget: SakanaWidgetApi, event: MouseEvent) => void>();
+		const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+		widgetRef.current!.addControl({ id: "test-control", label: "Test control", icon, onClick });
+		const button = document.querySelector<HTMLButtonElement>(
+			"[data-sakana-control='test-control']",
+		)!;
+		expect(button.querySelector("svg")).not.toBe(icon);
+
+		await page.getByRole("button", { name: "Test control" }).click();
+
+		expect(onClick).toHaveBeenCalledOnce();
+		expect(onClick.mock.calls[0]?.[0]).toBe(widgetRef.current);
+		expect(onClick.mock.calls[0]?.[1]).toBeInstanceOf(MouseEvent);
+		widgetRef.current!.removeControl("test-control");
+		expect(button.isConnected).toBe(false);
+		button.click();
+		expect(onClick).toHaveBeenCalledOnce();
 	});
 
 	test("div attribute passthrough - extra HTML attributes forwarded to container div", async () => {

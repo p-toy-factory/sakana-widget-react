@@ -4,11 +4,13 @@ Instructions for AI coding agents working on this repository.
 
 ## Project Overview
 
-A React component wrapper for [Sakana! Widget](https://github.com/dsrkafuu/sakana-widget). The library exports `SakanaWidget` and `SakanaWidgetReact` (alias to avoid naming conflicts with the upstream `SakanaWidget` class) from `src/index.tsx`.
+A React component wrapper for [Sakana! Widget](https://github.com/dsrkafuu/sakana-widget). The library exports `SakanaWidget` and `SakanaWidgetReact` (alias to avoid naming conflicts with the upstream `SakanaWidget` class) from `src/index.tsx`. The package requires upstream v4 and includes both built-in characters. The default entry wraps the core component with a module-level once-only initializer for the built-in characters. The `sakana-widget-react/core` entry exports the same component aliases and accepts an optional `initializer` prop for custom registration. CSS is imported automatically from both entries.
 
 Use the Node.js version specified in `.node-version`.
 
 For upstream sakana-widget documentation, see `node_modules/sakana-widget/README.md`.
+
+Use static runtime imports from `sakana-widget/core`; the upstream default entry registers built-in characters with browser globals during evaluation. Run the optional initializer, construction, and mounting synchronously in the client `useIsomorphicLayoutEffect`. Initializers may run repeatedly and must be safe to repeat; the default wrapper supplies a module-level once-only initializer. Server builds must support CSS imports. Mount upstream directly into the stable React host; v4 appends its widget node, and an intermediate container breaks `autoFit`.
 
 ## Commands
 
@@ -38,7 +40,7 @@ pnpm run storybook    # Start Storybook on port 6006
 
 Two test projects run via Vitest (`pnpm run test`):
 
-- **Node tests** (`src/**/*.test.{ts,tsx}`) — unit tests using `@testing-library/react` and happy-dom
+- **Node tests** (`src/**/*.test.{ts,tsx}`) — unit tests using `@testing-library/react` and happy-dom; SSR tests opt into the Node environment
 - **Browser tests** (`src/**/*.browser.test.{ts,tsx}`) — integration tests using Playwright via `@vitest/browser-playwright`
 
 Both projects enable React StrictMode by default. Use the configured render helpers; see [Testing](.agents/docs/testing.md).

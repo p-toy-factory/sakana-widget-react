@@ -1,8 +1,6 @@
-import "sakana-widget/lib/index.css";
-
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import type { SakanaWidgetOptions } from "sakana-widget";
+import type { SakanaWidgetOptions } from "sakana-widget/core";
 
 import { SakanaWidget, type SakanaWidgetProps } from ".";
 
@@ -11,6 +9,7 @@ function toWidgetProps({
 	character,
 	controls,
 	draggable,
+	imageFit,
 	rod,
 	rotate,
 	size,
@@ -27,6 +26,7 @@ function toWidgetProps({
 				character,
 				controls,
 				draggable,
+				imageFit,
 				rod,
 				rotate,
 				size,
@@ -41,6 +41,7 @@ function toWidgetProps({
 const meta: Meta = {
 	title: "SakanaWidget",
 	component: SakanaWidget,
+	render: (args) => <SakanaWidget {...toWidgetProps(args)} />,
 	argTypes: {
 		disableBounceOnMount: {
 			control: "boolean",
@@ -62,6 +63,11 @@ const meta: Meta = {
 			defaultValue: true,
 			control: "boolean",
 			description: "controls bar, default to `true`",
+		},
+		imageFit: {
+			control: "select",
+			options: ["cover", "contain"],
+			description: "image fit in the square image area, default to `cover`",
 		},
 		draggable: {
 			defaultValue: true,
@@ -120,6 +126,7 @@ export const Primary: Story = {
 export const DisableBounceOnMount: Story = {
 	args: {
 		disableBounceOnMount: true,
+		rotate: 30,
 	},
 };
 
@@ -144,5 +151,11 @@ export const TestAvoidUnmountOnPropsChanges: Story = {
 				<SakanaWidget {...toWidgetProps(args)} />
 			</div>
 		);
+	},
+};
+
+export const ImageFit: Story = {
+	args: {
+		imageFit: "contain",
 	},
 };

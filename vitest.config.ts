@@ -9,6 +9,7 @@ export default defineConfig({
 				test: {
 					environment: "happy-dom",
 					setupFiles: ["./test/setup.node.ts"],
+					server: { deps: { inline: ["sakana-widget"] } },
 					include: ["./src/**/*.test.{ts,tsx}"],
 					exclude: ["./src/**/*.browser.test.{ts,tsx}"],
 				},
@@ -16,7 +17,12 @@ export default defineConfig({
 			{
 				plugins: [react()],
 				optimizeDeps: {
-					include: ["vitest-browser-react", "vitest-browser-react/pure"],
+					include: [
+						"vitest-browser-react",
+						"vitest-browser-react/pure",
+						"sakana-widget/characters/chisato",
+						"sakana-widget/characters/takina",
+					],
 				},
 				test: {
 					name: "browser",

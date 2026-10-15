@@ -32,7 +32,7 @@
     ],
     "unicode-bom": ["error", "never"],
     "typescript/ban-ts-comment": ["error", { "ts-expect-error": "allow-with-description" }],
-    "vitest/valid-title": "off",
+    "vitest/valid-title": "off"
   },
   "overrides": [
     {
@@ -41,6 +41,6 @@
         "react-perf/jsx-no-new-function-as-prop": "off",
         "react-perf/jsx-no-new-object-as-prop": "off"
       }
-    },
+    }
   ]
 }

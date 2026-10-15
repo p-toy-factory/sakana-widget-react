@@ -1,73 +1,29 @@
-import { type DetailedHTMLProps, forwardRef, type HTMLAttributes, type Ref, useRef } from "react";
-import SakanaWidget, { type SakanaWidgetOptions } from "sakana-widget";
-import { useIsomorphicLayoutEffect } from "./hooks/use-isomorphic-layout-effect";
+import { forwardRef } from "react";
+import chisato from "sakana-widget/characters/chisato";
+import takina from "sakana-widget/characters/takina";
+import type SakanaWidget from "sakana-widget/core";
+import { SakanaWidget as Core, type SakanaWidgetProps as CoreProps } from "./core";
 
-import { assignRef, useMergeRefs } from "./hooks/use-merge-refs";
-import { useStructurallyStableValue } from "./hooks/use-structurally-stable-value";
+export type { SakanaWidgetApi } from "./core";
+export type SakanaWidgetProps = Omit<CoreProps, "initializer">;
 
-type DivElementAttributes = Omit<
-	DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
-	"key" | "ref"
->;
-
-export type SakanaWidgetApi = Omit<SakanaWidget, "mount" | "unmount">;
-
-export interface SakanaWidgetProps extends DivElementAttributes {
-	/** @default false */
-	disableBounceOnMount?: boolean;
-	widgetRef?: Ref<SakanaWidgetApi>;
-	options?: SakanaWidgetOptions;
+function once<Args extends unknown[]>(fn: (...args: Args) => void) {
+	let called = false;
+	return (...args: Args) => {
+		if (called) return;
+		fn(...args);
+		called = true;
+	};
 }
+
+const initialize = once((Widget: typeof SakanaWidget) => {
+	Widget.registerCharacter("chisato", chisato);
+	Widget.registerCharacter("takina", takina);
+});
 
 const SakanaWidgetReact = forwardRef<HTMLDivElement, SakanaWidgetProps>(
 	function SakanaWidgetReact(props, ref) {
-		const { disableBounceOnMount = false, widgetRef, options, ...divAttrs } = props;
-		const divElementRef = useRef<HTMLDivElement>(null);
-		const stableOptions = useStructurallyStableValue(options);
-
-		useIsomorphicLayoutEffect(() => {
-			const instance = new SakanaWidget(stableOptions);
-
-			// #region Change GitHub icon link
-			// @ts-expect-error Get private property
-			const domApp = instance._domApp as HTMLDivElement;
-			const githubIconDom: HTMLAnchorElement | null = domApp.querySelector(
-				"a.sakana-widget-ctrl-item",
-			);
-			if (githubIconDom) {
-				githubIconDom.href = "https://github.com/p-toy-factory/sakana-widget-react";
-			}
-			// #endregion
-
-			/**
-			 * The div element will be replaced during calling `SakanaWidget.mount`
-			 * @see https://github.com/dsrkafuu/sakana-widget/blob/69dbdd85688425ece3f17c1abc7c92effe842704/src/index.ts#L665C28-L665C28
-			 */
-			const container = divElementRef.current!;
-			const div = document.createElement("div");
-			container.replaceChildren(div);
-			instance.mount(div);
-
-			if (disableBounceOnMount) {
-				instance.setState({ r: 0, y: 0.06 });
-			}
-
-			const refCleanup = assignRef(widgetRef, instance as SakanaWidgetApi);
-
-			return () => {
-				if (typeof refCleanup === "function") {
-					refCleanup();
-				} else {
-					assignRef(widgetRef, null);
-				}
-				// The upstream Close control may have already unmounted this instance.
-				if (container.contains(domApp)) {
-					instance.unmount();
-				}
-			};
-		}, [disableBounceOnMount, stableOptions]);
-
-		return <div ref={useMergeRefs(divElementRef, ref)} {...divAttrs} />;
+		return <Core {...props} ref={ref} initializer={initialize} />;
 	},
 );
 

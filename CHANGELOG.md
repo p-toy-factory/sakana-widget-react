@@ -1,5 +1,20 @@
 # Changelog
 
+## v2.0.0
+
+Breaking changes:
+
+- Require `sakana-widget` v4; support for upstream v2 and v3 has been removed.
+
+Other changes:
+
+- Import upstream CSS automatically. Client and SSR bundlers must support CSS imports.
+- Support the v4 `imageFit` option and custom controls through `widgetRef`.
+- Add `sakana-widget-react/core` with an optional `initializer` for custom character registration before synchronous widget creation and mounting.
+- Register built-in characters once through the default entry; widget creation and initializers run only in the browser.
+
+**Full Changelog**: https://github.com/p-toy-factory/sakana-widget-react/compare/v1.0.1...v2.0.0
+
 ## v1.0.1
 
 - Fix a duplicate `unmount()` call when React cleanup follows the widget Close action.
