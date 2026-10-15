@@ -2,7 +2,7 @@
 
 Tests use **Vitest** configured in `vitest.config.ts` with two test projects:
 
-- **Node tests** (`src/**/*.test.{ts,tsx}`) — unit tests with `@testing-library/react` in happy-dom
+- **Node tests** (`src/**/*.test.{ts,tsx}`) — unit tests with `@testing-library/react` in happy-dom; SSR tests use `@vitest-environment node` to verify imports and rendering without browser globals
 - **Browser tests** (`src/**/*.browser.test.{ts,tsx}`) — integration tests with Playwright (`@vitest/browser-playwright`, Chromium, 300×300 viewport)
 
 ## Run all tests

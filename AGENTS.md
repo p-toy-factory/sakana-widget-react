@@ -4,9 +4,11 @@ Instructions for AI coding agents working on this repository.
 
 ## Project Overview
 
-A React component wrapper for [Sakana! Widget](https://github.com/dsrkafuu/sakana-widget). The library exports `SakanaWidget` and `SakanaWidgetReact` (alias to avoid naming conflicts with the upstream `SakanaWidget` class) from `src/index.tsx`.
+A React component wrapper for [Sakana! Widget](https://github.com/dsrkafuu/sakana-widget). The library exports `SakanaWidget` and `SakanaWidgetReact` (alias to avoid naming conflicts with the upstream `SakanaWidget` class) from `src/index.tsx` (default entry) and `src/core.tsx` (`sakana-widget-react/core`). The package requires upstream v4. The default entry registers both built-in characters; the core entry registers none. Both entries dynamically load the upstream module and its CSS after mounting in the browser.
 
 For upstream sakana-widget documentation, see `node_modules/sakana-widget/README.md`.
+
+Keep runtime upstream imports inside client effects: the v4 default entry reads `window` during built-in character registration, so importing it statically breaks server imports before effects run. The default and core upstream class declarations also have incompatible private-member types; the shared factory preserves entry-specific public aliases through its generic lifecycle contract.
 
 ## Commands
 
@@ -36,7 +38,7 @@ pnpm run storybook    # Start Storybook on port 6006
 
 Two test projects run via Vitest (`pnpm run test`):
 
-- **Node tests** (`src/**/*.test.{ts,tsx}`) — unit tests using `@testing-library/react` and happy-dom
+- **Node tests** (`src/**/*.test.{ts,tsx}`) — unit tests using `@testing-library/react` and happy-dom; SSR tests opt into the Node environment
 - **Browser tests** (`src/**/*.browser.test.{ts,tsx}`) — integration tests using Playwright via `@vitest/browser-playwright`
 
 Run a specific test file:

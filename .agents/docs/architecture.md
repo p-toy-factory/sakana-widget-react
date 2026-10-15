@@ -1,12 +1,18 @@
 # Architecture
 
-The library exports `SakanaWidget` and `SakanaWidgetReact` (alias to avoid naming conflicts with the upstream `SakanaWidget` class) from `src/index.tsx`. Both refer to the same React component that wraps the vanilla JS [SakanaWidget](https://github.com/dsrkafuu/sakana-widget) class.
+The library exports `SakanaWidget` and `SakanaWidgetReact` (alias to avoid naming conflicts with the upstream `SakanaWidget` class) from `src/index.tsx` and `src/core.tsx`. The default entry uses the upstream default entry, which registers both built-in characters; the core entry uses `sakana-widget/core` and registers none. Both load upstream CSS with the upstream module after mounting in the browser. Each entry exposes a React component built by the shared factory that wraps the vanilla JS [SakanaWidget](https://github.com/dsrkafuu/sakana-widget) class.
 
 ## Key Design Decisions
 
 ### DOM Delegation
 
-The component does not manage widget DOM via React reconciliation. It creates a container `<div>` and lets the vanilla SakanaWidget class handle its own DOM, with manual cleanup on unmount.
+The component does not manage widget DOM via React reconciliation. It creates a host `<div>` and mounts the vanilla SakanaWidget directly into it. Upstream v4 appends its own DOM and preserves existing host children. Cleanup calls upstream unmount only while the instance is still mounted, because the upstream close control can already have unmounted it. React owns the host and renders its children through a Fragment so that React text updates preserve the appended upstream node. `dangerouslySetInnerHTML` is omitted from supported host props because it can replace the upstream DOM.
+
+### Client Loading and Upstream Types
+
+Upstream v4's default entry reads `window` while registering its built-in characters during module evaluation. A static runtime import would therefore break server imports even if construction were inside an effect. Both React entries use type-only upstream imports at module scope and dynamic runtime imports inside the mount effect. Effects cancel pending initialization on cleanup; failed loads are surfaced through React error boundaries. Server rendering produces only the React host and its children.
+
+The upstream default and core entries publish separate class declarations with private members, which TypeScript treats as incompatible. The shared component factory accepts a minimal lifecycle contract and preserves the entry-specific instance type through generics. Each public entry exports its own concrete `SakanaWidgetApi` and `SakanaWidgetProps` aliases.
 
 ### Structural Memoization
 
@@ -28,4 +34,10 @@ The component exposes:
 `SakanaWidgetApi` is the upstream `SakanaWidget` type with `mount` and `unmount`
 omitted. The runtime ref value is still the original upstream instance, but React owns
 the widget lifecycle and the public TypeScript handle points consumers toward runtime
-controls such as `setState`, `setCharacter`, `nextCharacter`, and `triggerAutoMode`.
+controls such as `setState`, `setCharacter`, `nextCharacter`, `triggerAutoMode`, `addControl`, and `removeControl`.
+
+`widgetRef` is populated asynchronously after the module loads and the instance mounts. A stable callback `widgetRef` can configure each instance and return cleanup. Ref changes alone do not recreate the instance or rerun configuration; updating an object ref does not schedule React effects.
+
+### Initial Motion
+
+`disableBounceOnMount` sets the initial state to the v4 equilibrium for the configured `rotate` value, including zero velocities. Options changes and changes to this prop recreate the instance.

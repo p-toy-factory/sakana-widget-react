@@ -1,16 +1,20 @@
-import "sakana-widget/lib/index.css";
-
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import SakanaWidgetClass from "sakana-widget/core";
+import takina from "sakana-widget/characters/takina";
 import type { SakanaWidgetOptions } from "sakana-widget";
 
-import { SakanaWidget, type SakanaWidgetProps } from ".";
+import { SakanaWidget, type SakanaWidgetApi, type SakanaWidgetProps } from ".";
+import { SakanaWidget as SakanaWidgetCore } from "./core";
+
+SakanaWidgetClass.registerCharacter("takina", takina);
 
 function toWidgetProps({
 	autoFit,
 	character,
 	controls,
 	draggable,
+	imageFit,
 	rod,
 	rotate,
 	size,
@@ -27,6 +31,7 @@ function toWidgetProps({
 				character,
 				controls,
 				draggable,
+				imageFit,
 				rod,
 				rotate,
 				size,
@@ -41,6 +46,7 @@ function toWidgetProps({
 const meta: Meta = {
 	title: "SakanaWidget",
 	component: SakanaWidget,
+	render: (args) => <SakanaWidget {...toWidgetProps(args)} />,
 	argTypes: {
 		disableBounceOnMount: {
 			control: "boolean",
@@ -62,6 +68,11 @@ const meta: Meta = {
 			defaultValue: true,
 			control: "boolean",
 			description: "controls bar, default to `true`",
+		},
+		imageFit: {
+			control: "select",
+			options: ["cover", "contain"],
+			description: "image fit in the square image area, default to `cover`",
 		},
 		draggable: {
 			defaultValue: true,
@@ -120,6 +131,7 @@ export const Primary: Story = {
 export const DisableBounceOnMount: Story = {
 	args: {
 		disableBounceOnMount: true,
+		rotate: 30,
 	},
 };
 
@@ -145,4 +157,54 @@ export const TestAvoidUnmountOnPropsChanges: Story = {
 			</div>
 		);
 	},
+};
+
+export const ImageFit: Story = {
+	args: {
+		imageFit: "contain",
+	},
+};
+
+export const CoreWithSelectedCharacter: Story = {
+	parameters: {
+		docs: {
+			description: {
+				story:
+					"Import the React component from sakana-widget-react/core and register Takina using sakana-widget/core before rendering. This Storybook also loads the default entry for other stories; a standalone core bundle can omit the other built-in image.",
+			},
+		},
+	},
+	render: () => <SakanaWidgetCore options={{ character: "takina" }} />,
+};
+
+function CustomControlsExample() {
+	const [bounces, setBounces] = useState(0);
+	const configureWidget = useCallback((widget: SakanaWidgetApi | null) => {
+		if (!widget) return;
+		const icon = document.createElement("span");
+		icon.textContent = "↻";
+		widget.addControl({
+			id: "bounce",
+			label: "Bounce",
+			icon,
+			onClick: () => {
+				widget.setState({ r: 1, y: 0.2 });
+				setBounces((count) => count + 1);
+			},
+		});
+		return () => {
+			widget.removeControl("bounce");
+		};
+	}, []);
+
+	return (
+		<div>
+			<p>Custom control clicks: {bounces}</p>
+			<SakanaWidget widgetRef={configureWidget} options={{ title: true }} />
+		</div>
+	);
+}
+
+export const CustomControls: Story = {
+	render: () => <CustomControlsExample />,
 };
