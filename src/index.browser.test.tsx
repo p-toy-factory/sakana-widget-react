@@ -80,72 +80,30 @@ describe("SakanaWidget", () => {
 		expect(widgetRef.current).toBe(firstInstance);
 	});
 
-	test("preserves the forwarded host and React children across instance replacement", async () => {
-		const hostRef = createRef<HTMLDivElement>();
-		const widgetRef = createRef<SakanaWidgetApi>();
-		const { container, rerender, unmount } = await render(
-			<SakanaWidget ref={hostRef} widgetRef={widgetRef} options={{ size: 200 }} data-testid="host">
-				<span data-testid="child">First child</span>
-			</SakanaWidget>,
-		);
-		const host = hostRef.current!;
-		const child = host.querySelector("[data-testid='child']");
-		const widgetNode = host.querySelector(".sakana-widget-wrapper");
-		const instance = widgetRef.current;
-		expect(host).toBe(container.querySelector("[data-testid='host']"));
-		expect(widgetNode?.parentElement).toBe(host);
-		expect(child?.textContent).toBe("First child");
-
-		await rerender(
-			<SakanaWidget ref={hostRef} widgetRef={widgetRef} options={{ size: 250 }} data-testid="host">
-				<span data-testid="child">Updated child</span>
-			</SakanaWidget>,
-		);
-
-		expect(hostRef.current).toBe(host);
-		expect(host.querySelector("[data-testid='child']")).toBe(child);
-		expect(child?.textContent).toBe("Updated child");
-		expect(widgetRef.current).not.toBe(instance);
-		expect(widgetNode?.isConnected).toBe(false);
-		expect(host.querySelectorAll(".sakana-widget-wrapper")).toHaveLength(1);
-		expect(host.querySelector(".sakana-widget-wrapper")?.parentElement).toBe(host);
-
-		await unmount();
-
-		expect(hostRef.current).toBeNull();
-		expect(widgetRef.current).toBeNull();
-		expect(host.isConnected).toBe(false);
-	});
-
-	test("updating a text child preserves the mounted widget and its ref", async () => {
+	test("keeps the forwarded host and delegates DOM to an internal container", async () => {
 		const hostRef = createRef<HTMLDivElement>();
 		const widgetRef = createRef<SakanaWidgetApi>();
 		const { rerender, unmount } = await render(
-			<SakanaWidget ref={hostRef} widgetRef={widgetRef}>
-				First text
-			</SakanaWidget>,
+			<SakanaWidget ref={hostRef} widgetRef={widgetRef} options={{ size: 200 }} />,
 		);
 		const host = hostRef.current!;
+		const inner = host.firstElementChild!;
 		const widgetNode = host.querySelector(".sakana-widget-wrapper")!;
-		const instance = widgetRef.current;
+		expect(widgetNode.parentElement).toBe(inner);
+		expect(inner).not.toBe(host);
 
-		await rerender(
-			<SakanaWidget ref={hostRef} widgetRef={widgetRef}>
-				Second text
-			</SakanaWidget>,
-		);
+		await rerender(<SakanaWidget ref={hostRef} widgetRef={widgetRef} options={{ size: 250 }} />);
 
 		expect(hostRef.current).toBe(host);
-		expect(widgetRef.current).toBe(instance);
-		expect(host.firstChild?.textContent).toBe("Second text");
-		expect(host.querySelector(".sakana-widget-wrapper")).toBe(widgetNode);
-		expect(widgetNode.isConnected).toBe(true);
-
+		expect(inner.isConnected).toBe(false);
+		expect(widgetNode.parentElement).toBeNull();
+		expect(host.querySelectorAll(".sakana-widget-wrapper")).toHaveLength(1);
+		expect(host.querySelector(".sakana-widget-wrapper")?.parentElement).toBe(
+			host.firstElementChild,
+		);
 		await unmount();
-
 		expect(hostRef.current).toBeNull();
 		expect(widgetRef.current).toBeNull();
-		expect(widgetNode.parentElement).toBeNull();
 	});
 
 	test("StrictMode leaves one working widget and cleans up its refs", async () => {
@@ -153,14 +111,11 @@ describe("SakanaWidget", () => {
 		const widgetRef = createRef<SakanaWidgetApi>();
 		const { unmount } = await render(
 			<StrictMode>
-				<SakanaWidget ref={hostRef} widgetRef={widgetRef}>
-					<span>React child</span>
-				</SakanaWidget>
+				<SakanaWidget ref={hostRef} widgetRef={widgetRef} />
 			</StrictMode>,
 		);
 		const host = hostRef.current!;
 		expect(host.querySelectorAll(".sakana-widget-wrapper")).toHaveLength(1);
-		expect(host.querySelector("span")?.textContent).toBe("React child");
 		expect(widgetRef.current).toBeTruthy();
 		await page.getByRole("button", { name: "Auto Mode" }).click();
 		expect(host.querySelector("[aria-label='Auto Mode']")?.getAttribute("aria-pressed")).toBe(
@@ -176,14 +131,9 @@ describe("SakanaWidget", () => {
 
 	test("Close followed by React unmount does not unmount upstream twice", async () => {
 		const widgetRef = createRef<SakanaWidgetApi>();
-		const { container, unmount } = await render(
-			<SakanaWidget widgetRef={widgetRef}>
-				<span>React child</span>
-			</SakanaWidget>,
-		);
+		const { container, unmount } = await render(<SakanaWidget widgetRef={widgetRef} />);
 		await page.getByRole("button", { name: "Close" }).click();
 		expect(container.querySelector(".sakana-widget-wrapper")).toBeNull();
-		expect(container.querySelector("span")?.textContent).toBe("React child");
 
 		await unmount();
 
@@ -191,38 +141,34 @@ describe("SakanaWidget", () => {
 		expect(container.innerHTML).toBe("");
 	});
 
-	test("option changes recreate a closed widget while retaining its host and children", async () => {
+	test("option changes recreate a closed widget while retaining its host", async () => {
 		const hostRef = createRef<HTMLDivElement>();
 		const widgetRef = createRef<SakanaWidgetApi>();
 		const { rerender } = await render(
-			<SakanaWidget ref={hostRef} widgetRef={widgetRef} options={{ size: 200 }}>
-				<span>React child</span>
-			</SakanaWidget>,
+			<SakanaWidget ref={hostRef} widgetRef={widgetRef} options={{ size: 200 }} />,
 		);
 		const host = hostRef.current!;
 		const instance = widgetRef.current;
 		await page.getByRole("button", { name: "Close" }).click();
 
-		await rerender(
-			<SakanaWidget ref={hostRef} widgetRef={widgetRef} options={{ size: 250 }}>
-				<span>React child</span>
-			</SakanaWidget>,
-		);
+		await rerender(<SakanaWidget ref={hostRef} widgetRef={widgetRef} options={{ size: 250 }} />);
 
 		expect(hostRef.current).toBe(host);
 		expect(widgetRef.current).not.toBe(instance);
 		expect(host.querySelectorAll(".sakana-widget-wrapper")).toHaveLength(1);
 		expect(host.querySelector(".sakana-widget-app")?.getAttribute("style")).toContain("250px");
-		expect(host.querySelector("span")?.textContent).toBe("React child");
 	});
 
 	test.each([
-		{ rotate: undefined, equilibrium: 0 },
-		{ rotate: 40, equilibrium: -20 },
-		{ rotate: -40, equilibrium: 0 },
-		{ rotate: 160, equilibrium: -60 },
-	])("disableBounceOnMount stays still at rotate=$rotate", async ({ rotate, equilibrium }) => {
-		const { container } = await render(<SakanaWidget disableBounceOnMount options={{ rotate }} />);
+		{ options: {}, equilibrium: 0 },
+		{ options: { rotate: 40 }, equilibrium: -20 },
+		{ options: { rotate: -40 }, equilibrium: 0 },
+		{ options: { rotate: 160 }, equilibrium: -60 },
+	])("disableBounceOnMount stays still with $options", async ({ options, equilibrium }) => {
+		const widgetRef = createRef<SakanaWidgetApi>();
+		const { container } = await render(
+			<SakanaWidget widgetRef={widgetRef} disableBounceOnMount options={options} />,
+		);
 		const image = container.querySelector<HTMLDivElement>(".sakana-widget-img")!;
 		const transform = `rotate(${equilibrium}deg) translateX(${equilibrium}px) translateY(0px)`;
 		expect(image.style.transform).toBe(transform);
@@ -233,6 +179,13 @@ describe("SakanaWidget", () => {
 			await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
 			expect(image.style.transform).toBe(transform);
 		}
+		// Invalid physics can leave the last valid CSS transform in place.
+		const diagnostics = widgetRef.current as unknown as {
+			_state: Record<string, number>;
+			_running: boolean;
+		};
+		expect(Object.values(diagnostics._state).every(Number.isFinite)).toBe(true);
+		expect(diagnostics._running).toBe(false);
 	});
 
 	test("imageFit is applied and updates through options", async () => {

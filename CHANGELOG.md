@@ -5,16 +5,14 @@
 Breaking changes:
 
 - Require `sakana-widget` v4; support for upstream v2 and v3 has been removed.
-- Both React entries load upstream CSS automatically in the browser. Your client bundler must support CSS imports.
 - `widgetRef` is populated asynchronously after the widget loads and mounts. Use a stable callback ref for initialization.
-- Exclude `dangerouslySetInnerHTML` from supported host props; React children remain supported.
 
 Other changes:
 
+- Both React entries load upstream CSS automatically in the browser. Your client bundler must support CSS imports.
 - Add `sakana-widget-react/core` for applications that register selected or custom characters. The default entry still includes both built-in characters.
 - Support the v4 `imageFit` option and custom controls through `widgetRef`.
 - Defer upstream loading until client mount for SSR imports and rendering; cancel pending initialization when props change or the component unmounts.
-- Mount directly into the React host without replacing its existing children.
 - Avoid a second unmount when an upstream close control has already unmounted the widget.
 - Start at the configured rotation equilibrium when `disableBounceOnMount` is enabled.
 

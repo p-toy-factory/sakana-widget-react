@@ -14,7 +14,7 @@ test("core renders an explicitly registered character without bundled defaults",
 		"data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2220%22%20height=%2220%22/%3E";
 	UpstreamSakanaWidget.registerCharacter("custom-core", {
 		image,
-		initialState: { i: 0.02, s: 0.1, d: 0.98, r: 20, y: 10, t: 0, w: 0 },
+		initialState: { i: 0.02, s: 0.1, d: 0.98, r: 20, y: 10, t: 50, w: 70 },
 	});
 	const hostRef = createRef<HTMLDivElement>();
 	const widgetRef = createRef<SakanaWidgetApi>();
@@ -24,18 +24,15 @@ test("core renders an explicitly registered character without bundled defaults",
 			widgetRef={widgetRef}
 			disableBounceOnMount
 			options={{ character: "custom-core", imageFit: "contain" }}
-		>
-			<span>Core child</span>
-		</SakanaWidget>,
+		/>,
 	);
 
 	await expect.poll(() => widgetRef.current).not.toBeNull();
 
 	expect(Object.keys(UpstreamSakanaWidget.getCharacters())).toEqual(["custom-core"]);
 	expect(hostRef.current?.querySelector(".sakana-widget-wrapper")?.parentElement).toBe(
-		hostRef.current,
+		hostRef.current?.firstElementChild,
 	);
-	expect(hostRef.current?.querySelector("span")?.textContent).toBe("Core child");
 	expect(widgetRef.current).toBeInstanceOf(UpstreamSakanaWidget);
 	const character = container.querySelector<HTMLDivElement>(".sakana-widget-img")!;
 	expect(character.style.backgroundImage).toContain("data:image/svg+xml");

@@ -2,7 +2,7 @@
 
 ![Banner](https://socialify.git.ci/p-toy-factory/sakana-widget-react/image?font=KoHo&forks=1&issues=1&logo=https%3A%2F%2Fraw.githubusercontent.com%2Fdsrkafuu%2Fsakana-widget%2Fmain%2Fsrc%2Fcharacters%2Fchisato.png&name=1&pattern=Formal%20Invitation&pulls=1&stargazers=1&theme=Auto)
 
-A [React](https://react.dev/) component that wraps [Sakana! Widget](https://github.com/dsrkafuu/sakana-widget).
+A [React](https://react.dev/) component that wrap [Sakana! Widget](https://github.com/dsrkafuu/sakana-widget).
 
 [See demo](https://sakana-widget-react.pages.dev/)
 
@@ -21,7 +21,7 @@ Version 2 of this wrapper requires `sakana-widget` 4. Versions 2 and 3 of the up
 Both React entries load the upstream module and its CSS asynchronously after
 mounting in the browser. No separate CSS import is needed. Your client bundler
 must support CSS imports. The wrapper can be imported and rendered on the server;
-it renders the host and any React children without creating a widget.
+it renders the host without creating a widget.
 
 ### Use component
 
@@ -90,7 +90,7 @@ import type { SakanaWidgetOptions } from "sakana-widget";
 
 type DivElementAttributes = Omit<
 	DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
-	"key" | "ref" | "dangerouslySetInnerHTML"
+	"key" | "ref"
 >;
 
 export interface SakanaWidgetProps extends DivElementAttributes {
@@ -103,8 +103,7 @@ export interface SakanaWidgetProps extends DivElementAttributes {
 export type SakanaWidgetApi = Omit<SakanaWidget, "mount" | "unmount">;
 ```
 
-The component forwards standard `<div>` attributes, except `dangerouslySetInnerHTML`,
-to its root container and preserves React children alongside the widget. It
+The component forwards standard `<div>` attributes to its root container and
 forwards the regular React `ref` to that container. Use `widgetRef` for the
 Sakana widget instance itself. React owns the widget lifecycle, so
 `SakanaWidgetApi` hides `mount` and `unmount` from TypeScript; the runtime value

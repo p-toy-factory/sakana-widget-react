@@ -8,7 +8,7 @@ A React component wrapper for [Sakana! Widget](https://github.com/dsrkafuu/sakan
 
 For upstream sakana-widget documentation, see `node_modules/sakana-widget/README.md`.
 
-Keep runtime upstream imports inside client effects: the v4 default entry reads `window` during built-in character registration, so importing it statically breaks server imports before effects run. The default and core upstream class declarations also have incompatible private-member types; the shared factory preserves entry-specific public aliases through its generic lifecycle contract.
+Keep runtime upstream imports inside client effects: the v4 default entry reads `window` during built-in character registration, so importing it statically breaks server imports before effects run. The default and core upstream class declarations also have incompatible private-member types; `src/hooks/use-sakana-widget.ts` shares lifecycle behavior while each entry defines its own component and public types.
 
 ## Commands
 
