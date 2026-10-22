@@ -24,3 +24,16 @@ pnpm run test
 ```bash
 pnpm run test src/hooks/use-structurally-stable-value.test.ts
 ```
+
+## Package and Source Navigation
+
+1. Prepare a temporary repository copy without `dist/` and install its development dependencies.
+2. Run `npm pack --foreground-scripts --pack-destination <archive-directory>` in that copy. The `prepack` hook builds the package.
+3. Run `tar -tzf <tarball>` to inspect the archive. Check for declarations, declaration maps, source files, and hooks. Exclude tests and stories.
+4. Install the tarball in a consumer project outside the repository. Use no workspace links or TypeScript path aliases.
+5. Select the workspace TypeScript version in the editor. Use the same version as this repository.
+6. Use Go to Definition on `SakanaWidget`, `SakanaWidgetReact`, `SakanaWidgetProps`, and `SakanaWidgetApi`. Each target must be the installed package's `src/index.tsx`.
+7. Check that relative source imports resolve to the installed hooks.
+8. Run `pnpm run typecheck` and `pnpm run build --fail-on-warn` in the repository.
+
+Record editor navigation separately. A successful build or pack does not prove that editor navigation works.

@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.1
+
+- Fix a duplicate `unmount()` call when React cleanup follows the widget Close action.
+
 ## v1.0.0
 
 Breaking changes:

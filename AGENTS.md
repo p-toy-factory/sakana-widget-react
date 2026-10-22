@@ -32,7 +32,7 @@ pnpm run storybook    # Start Storybook on port 6006
 - **Formatter**: Oxfmt (`pnpm run fmt`)
 - **Linter**: Oxlint (`pnpm run lint:fix`)
 - **Indentation**: Tabs for source code (JS/TS/TSX use 2-space width); spaces for JSON/YAML (2-space)
-  - `useIsomorphicLayoutEffect` is still the repo's custom layout-effect hook, but linting no longer depends on ESLint-specific hook configuration
+    - `useIsomorphicLayoutEffect` is still the repo's custom layout-effect hook, but linting no longer depends on ESLint-specific hook configuration
 
 ## Testing
 
