@@ -4,6 +4,15 @@ The library exports `SakanaWidget` and `SakanaWidgetReact` (alias to avoid namin
 
 ## Key Design Decisions
 
+### React Client Boundary
+
+The package exports `dist/index.js` as its only JavaScript entry. The tsdown
+JavaScript banner emits `"use client";` at the start of the output bundle, so the
+published entry explicitly declares its client boundary after bundling. Keep this
+in the build configuration rather than relying on source directives surviving
+bundling. Source files are shipped for declaration maps only, not as import
+entry points. Revisit this setup if server-compatible exports are added.
+
 ### DOM Delegation
 
 The component does not manage widget DOM via React reconciliation. It creates a container `<div>` and lets the vanilla SakanaWidget class handle its own DOM, with manual cleanup on unmount.

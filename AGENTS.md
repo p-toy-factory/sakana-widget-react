@@ -6,6 +6,8 @@ Instructions for AI coding agents working on this repository.
 
 A React component wrapper for [Sakana! Widget](https://github.com/dsrkafuu/sakana-widget). The library exports `SakanaWidget` and `SakanaWidgetReact` (alias to avoid naming conflicts with the upstream `SakanaWidget` class) from `src/index.tsx`.
 
+Use the Node.js version specified in `.node-version`.
+
 For upstream sakana-widget documentation, see `node_modules/sakana-widget/README.md`.
 
 ## Commands

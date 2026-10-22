@@ -1,5 +1,3 @@
-"use client";
-
 import { type DetailedHTMLProps, forwardRef, type HTMLAttributes, type Ref, useRef } from "react";
 import SakanaWidget, { type SakanaWidgetOptions } from "sakana-widget";
 import { useIsomorphicLayoutEffect } from "./hooks/use-isomorphic-layout-effect";

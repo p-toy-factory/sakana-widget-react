@@ -2,6 +2,8 @@
 
 ## Setup
 
+Use the Node.js version specified in `.node-version`.
+
 Install dependencies with the repo-managed [pnpm](https://pnpm.io/)
 
 ```
