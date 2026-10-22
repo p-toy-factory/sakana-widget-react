@@ -39,6 +39,8 @@ Two test projects run via Vitest (`pnpm run test`):
 - **Node tests** (`src/**/*.test.{ts,tsx}`) — unit tests using `@testing-library/react` and happy-dom
 - **Browser tests** (`src/**/*.browser.test.{ts,tsx}`) — integration tests using Playwright via `@vitest/browser-playwright`
 
+Both projects enable React StrictMode by default. Use the configured render helpers; see [Testing](.agents/docs/testing.md).
+
 Run a specific test file:
 
 ```bash

@@ -45,8 +45,9 @@ const SakanaWidgetReact = forwardRef<HTMLDivElement, SakanaWidgetProps>(
 			 * The div element will be replaced during calling `SakanaWidget.mount`
 			 * @see https://github.com/dsrkafuu/sakana-widget/blob/69dbdd85688425ece3f17c1abc7c92effe842704/src/index.ts#L665C28-L665C28
 			 */
+			const container = divElementRef.current!;
 			const div = document.createElement("div");
-			divElementRef.current!.replaceChildren(div);
+			container.replaceChildren(div);
 			instance.mount(div);
 
 			if (disableBounceOnMount) {
@@ -61,7 +62,10 @@ const SakanaWidgetReact = forwardRef<HTMLDivElement, SakanaWidgetProps>(
 				} else {
 					assignRef(widgetRef, null);
 				}
-				instance.unmount();
+				// The upstream Close control may have already unmounted this instance.
+				if (container.contains(domApp)) {
+					instance.unmount();
+				}
 			};
 		}, [disableBounceOnMount, stableOptions]);
 

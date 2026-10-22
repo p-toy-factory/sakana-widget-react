@@ -8,14 +8,19 @@ export default defineConfig({
 			{
 				test: {
 					environment: "happy-dom",
+					setupFiles: ["./test/setup.node.ts"],
 					include: ["./src/**/*.test.{ts,tsx}"],
 					exclude: ["./src/**/*.browser.test.{ts,tsx}"],
 				},
 			},
 			{
 				plugins: [react()],
+				optimizeDeps: {
+					include: ["vitest-browser-react", "vitest-browser-react/pure"],
+				},
 				test: {
 					name: "browser",
+					setupFiles: ["./test/setup.browser.ts"],
 					include: ["./src/**/*.browser.test.{ts,tsx}"],
 					browser: {
 						viewport: { width: 300, height: 300 },

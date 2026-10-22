@@ -8,6 +8,11 @@ The library exports `SakanaWidget` and `SakanaWidgetReact` (alias to avoid namin
 
 The component does not manage widget DOM via React reconciliation. It creates a container `<div>` and lets the vanilla SakanaWidget class handle its own DOM, with manual cleanup on unmount.
 
+The upstream Close control can unmount the widget before React cleanup runs.
+Cleanup checks whether the captured React container still contains the widget app
+before calling upstream `unmount()` again. Check containment rather than document
+connectivity so widgets in detached containers still release their resources.
+
 ### Structural Memoization
 
 Uses the `useStructurallyStableValue` hook with `dequal` for deep equality comparison. This prevents unnecessary widget re-instantiation when options objects are structurally equal but referentially different.
